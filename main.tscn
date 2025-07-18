@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bicc14jy1ta5b"]
+
+[ext_resource type="PackedScene" uid="uid://kbih5hymkb5o" path="res://scenes/ship.tscn" id="1_ig7tw"]
+
+[sub_resource type="Environment" id="Environment_7dm0k"]
+background_mode = 1
+background_color = Color(0.0768358, 0.0768358, 0.0768358, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+reflected_light_source = 1
+tonemap_exposure = 2.55
+
+[node name="Main" type="Node3D"]
+transform = Transform3D(1.00568, 0, 0, 0, 1.00568, 0, 0, 0, 1.00568, 0, 0, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.861134, -0.472303, 0.155285, 0, 0.310571, 0.944607, -0.497176, 0.818053, -0.268962, 0, 7.0599, -3.28136)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7dm0k")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3808, 0, 9.63105e-08)
+use_collision = true
+
+[node name="ShipBody" parent="." instance=ExtResource("1_ig7tw")]
+transform = Transform3D(-4.34645e-08, 0, -0.994352, 0, 0.994352, 0, 0.994352, 0, -4.34645e-08, -0.298306, 0, 0)
