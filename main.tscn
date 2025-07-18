@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bicc14jy1ta5b"]
+[gd_scene load_steps=4 format=3 uid="uid://bicc14jy1ta5b"]
 
 [ext_resource type="PackedScene" uid="uid://kbih5hymkb5o" path="res://scenes/ship.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://coelefamuuc5a" path="res://scenes/bullet.tscn" id="2_0xm2m"]
 
 [sub_resource type="Environment" id="Environment_7dm0k"]
 background_mode = 1
@@ -26,3 +27,6 @@ use_collision = true
 
 [node name="ShipBody" parent="." instance=ExtResource("1_ig7tw")]
 transform = Transform3D(-4.34645e-08, 0, -0.994352, 0, 0.994352, 0, 0.994352, 0, -4.34645e-08, -0.298306, 0, 0)
+
+[node name="Bullet" parent="." instance=ExtResource("2_0xm2m")]
+transform = Transform3D(0.994352, 0, 0, 0, 0.994352, 0, 0, 0, 0.994352, 3.48023, -3.77854, 1.19322)
