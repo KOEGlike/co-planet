@@ -1,11 +1,16 @@
+class_name Bullet
+
 extends RigidBody3D
 
-@export var direction:Vector3=Vector3(0,1,0)
-@export var speed:float=1
+@export var target:Vector3=Vector3(0,1,0)
+@export var speed:float=2
 
 func _on_body_entered(body: Node) -> void:
+	print("collided")
 	queue_free()
 	
-func _physics_process(delta: float) -> void:
-	global_position+=direction*speed*delta
+func _ready() -> void:
+		self.look_at(target)
 	
+func _physics_process(delta: float) -> void:
+	global_position+=-global_basis.z*speed*delta
