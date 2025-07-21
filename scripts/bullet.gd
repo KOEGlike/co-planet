@@ -2,8 +2,9 @@ class_name Bullet
 
 extends RigidBody3D
 
-@export var target:Vector3=Vector3(0,1,0)
+@export var target:=Vector3(0,1,0)
 @export var speed:float=2
+@export var damage:int=5
 
 func _on_body_entered(body: Node) -> void:
 	print("collided")

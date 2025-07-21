@@ -13,6 +13,8 @@ blend_mode = 1
 
 [node name="Ship" type="RigidBody3D"]
 transform = Transform3D(-5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 0, 0, 0)
+contact_monitor = true
+max_contacts_reported = 10
 script = ExtResource("1_2gnfn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -31,12 +33,46 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.74228e-09, 0, -0.2)
 [node name="Gun" parent="." instance=ExtResource("3_4tobq")]
 transform = Transform3D(0, -1, -1.03316e-07, -1, 7.10543e-15, -1.19209e-07, 1.19209e-07, 1.03316e-07, -1, -1.19209e-07, -3.57628e-08, -2)
 
-[node name="Crosshair" type="Sprite2D" parent="."]
+[node name="VisibleOnScreen" type="VisibleOnScreenNotifier3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, 0, 0, -0.546898)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" type="Sprite2D" parent="Control"]
 visible = false
 material = SubResource("CanvasItemMaterial_gudjc")
 position = Vector2(580, 297)
 scale = Vector2(9.96131, 10)
 texture = ExtResource("4_tfsc7")
 
-[node name="VisibleOnScreen" type="VisibleOnScreenNotifier3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, 0, 0, -0.546898)
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -84.0
+offset_right = 176.0
+grow_vertical = 0
+
+[node name="ColorRect" type="ColorRect" parent="Control/MarginContainer"]
+layout_mode = 2
+color = Color(0.385493, 0.385492, 0.385492, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ColorRect" type="ColorRect" parent="Control/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="died" from="." to="." method="_on_died"]
