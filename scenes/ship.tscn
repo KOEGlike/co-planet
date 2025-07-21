@@ -72,8 +72,8 @@ theme = ExtResource("4_3m36u")
 
 [node name="Crosshair" type="Sprite2D" parent="Control"]
 material = SubResource("CanvasItemMaterial_gudjc")
-position = Vector2(580, 297)
-scale = Vector2(9.96131, 10)
+position = Vector2(956, 556)
+scale = Vector2(15, 15)
 texture = ExtResource("4_tfsc7")
 
 [node name="HealthContainer" type="MarginContainer" parent="Control"]

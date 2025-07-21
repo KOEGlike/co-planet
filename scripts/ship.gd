@@ -97,26 +97,36 @@ func _process(delta: float) -> void:
 	if !camera.current:
 		return
 	
+	if ships_on_screen.is_empty():
+		target=null
+	
 	if Input.is_action_just_pressed("shoot"):
 		var direc:=gun.global_position
 		if target!=null:
 			direc = target.global_position
 		gun.shoot(direc)
 	
-	if !ships_on_screen.is_empty():
-		var ship:=ships_on_screen[0]
-		target=ship
-		
-		var pos:=camera.unproject_position(ship.global_position)
+	if target!=null:
+		var pos:=camera.unproject_position(target.global_position)
 		crosshair.position=lerp(crosshair.position, pos, 0.3)
 	else:
-		target=null
 		crosshair.position=get_viewport().size/2
 	
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		event.position
+	if event is InputEventMouseMotion: 
+		var closest:Node3D
+		var dist:float=INF
+		print("mouse: " + str(event.position))
+		for ship in ships_on_screen:
+			var cur_dist:float=event.position.distance_squared_to(camera.unproject_position(ship.global_position))
+			print("cur dist" + str(cur_dist))
+			if cur_dist < dist:
+				dist=cur_dist
+				closest=ship
+		target=closest
+		
+		
 
 
 func _on_body_entered(body: Node) -> void:
