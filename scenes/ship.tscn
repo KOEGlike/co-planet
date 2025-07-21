@@ -1,18 +1,43 @@
-[gd_scene load_steps=7 format=3 uid="uid://kbih5hymkb5o"]
+[gd_scene load_steps=14 format=3 uid="uid://kbih5hymkb5o"]
 
 [ext_resource type="Script" uid="uid://c3cidquvopei6" path="res://scripts/ship.gd" id="1_2gnfn"]
 [ext_resource type="PackedScene" uid="uid://ygd6s5gcauht" path="res://assets/ship_model.glb" id="1_q631a"]
 [ext_resource type="PackedScene" uid="uid://8ehaqiq45s0h" path="res://scenes/gun.tscn" id="3_4tobq"]
+[ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="4_3m36u"]
 [ext_resource type="Texture2D" uid="uid://cjrt5b8br7cuv" path="res://assets/pixil-frame-0.png" id="4_tfsc7"]
+[ext_resource type="Script" uid="uid://cxfebhkj30srm" path="res://scripts/health.gd" id="5_gudjc"]
+[ext_resource type="Script" uid="uid://c6vdap40ay4r6" path="res://scripts/mag.gd" id="6_7j21i"]
+[ext_resource type="Script" uid="uid://c6iydvpll8v17" path="res://scripts/mag_label.gd" id="8_8qiel"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2gnfn"]
 points = PackedVector3Array(5.96046e-08, -5.96046e-08, -1.42536, -0.996745, -5.96046e-08, 0.56246, 5.96046e-08, 0.547715, 0.210271, 0.996745, -5.96046e-08, 0.56246, 5.96046e-08, -0.547716, 0.210271)
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gudjc"]
-blend_mode = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gudjc"]
+bg_color = Color(0.6, 0.6, 0.6, 0.184314)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tfsc7"]
+bg_color = Color(0.979412, 0.000788382, 0.979405, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8qiel"]
+bg_color = Color(0.172833, 0.172833, 0.172833, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="Ship" type="RigidBody3D"]
 transform = Transform3D(-5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 0, 0, 0)
+mass = 10.0
 contact_monitor = true
 max_contacts_reported = 10
 script = ExtResource("1_2gnfn")
@@ -43,36 +68,78 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("4_3m36u")
 
 [node name="Crosshair" type="Sprite2D" parent="Control"]
-visible = false
 material = SubResource("CanvasItemMaterial_gudjc")
 position = Vector2(580, 297)
 scale = Vector2(9.96131, 10)
 texture = ExtResource("4_tfsc7")
 
-[node name="MarginContainer" type="MarginContainer" parent="Control"]
+[node name="HealthContainer" type="MarginContainer" parent="Control"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -84.0
-offset_right = 176.0
+offset_top = -60.0
+offset_right = 180.0
 grow_vertical = 0
+theme = ExtResource("4_3m36u")
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="ColorRect" type="ColorRect" parent="Control/MarginContainer"]
+[node name="HealthBar" type="ProgressBar" parent="Control/HealthContainer"]
 layout_mode = 2
-color = Color(0.385493, 0.385492, 0.385492, 1)
+size_flags_vertical = 1
+theme = ExtResource("4_3m36u")
+theme_override_styles/background = SubResource("StyleBoxFlat_gudjc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tfsc7")
+value = 100.0
+script = ExtResource("5_gudjc")
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/MarginContainer"]
-layout_mode = 2
+[node name="MagContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -69.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("4_3m36u")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ColorRect" type="ColorRect" parent="Control/MarginContainer/MarginContainer"]
+[node name="MagBar" type="ProgressBar" parent="Control/MagContainer"]
 layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("4_3m36u")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8qiel")
+value = 100.0
+show_percentage = false
+script = ExtResource("6_7j21i")
+
+[node name="Label" type="Label" parent="Control/MagContainer/MagBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8_8qiel")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="died" from="." to="." method="_on_died"]
+[connection signal="health_update" from="." to="." method="_on_health_update"]
+[connection signal="health_update" from="." to="Control/HealthContainer/HealthBar" method="_on_ship_health_update"]
+[connection signal="mag_update" from="Gun" to="Control/MagContainer/MagBar" method="_on_gun_mag_update"]
+[connection signal="mag_update" from="Gun" to="Control/MagContainer/MagBar/Label" method="_on_gun_mag_update"]

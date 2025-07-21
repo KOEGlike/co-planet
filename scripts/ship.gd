@@ -6,16 +6,18 @@ extends RigidBody3D
 @onready var gun: Gun = $Gun
 @onready var ships: Node = %Ships
 @onready var crosshair: Sprite2D = $Control/Crosshair
+@onready var control: Control = $Control
 
-signal died
+signal health_update(max:int, current:int)
 
-@export var health:=100:
+@export var max_health:=100
+
+var health:=max_health:
 	set(val):
-		if val <=0:
-			died.emit()
-			health=0
-		else:
-			health=val
+		if val<0:
+			val=0
+		health_update.emit(max_health, val)
+		health=val
 
 @export_category("camera")
 @export var camera_offset :=Vector3(-3, 1, 2)
@@ -24,7 +26,7 @@ signal died
 
 @export_category("speeds")
 @export var rotation_speed:=3
-@export var pitch_speed=5
+@export var pitch_speed:=5
 @export var speed:=10
 @export var pitch :=30
 
@@ -63,6 +65,9 @@ func _ready() -> void:
 		on_new_ship(child)
 	
 func _physics_process(delta: float) -> void:
+	if !camera.current:
+		return
+	
 	global_rotation.z=0
 	
 	var y_axis:=-Input.get_axis("left","right")
@@ -78,11 +83,6 @@ func _physics_process(delta: float) -> void:
 	else :
 		camera.fov=lerp(camera.fov, camera_fov, 0.1)
 		
-	if Input.is_action_just_pressed("shoot"):
-		var direc:=gun.global_position
-		if target!=null:
-			direc = target.global_position
-		gun.shoot(direc)
 	
 	
 	var camera_position := self.global_position + (camera_offset + -dir * Vector3(0,0.5,0)).rotated(Vector3(0,1,0), self.global_rotation.y+PI/2)
@@ -93,7 +93,16 @@ func _physics_process(delta: float) -> void:
 	camera.basis = Basis(next_rotation)
 
 func _process(delta: float) -> void:
-	#print(ships_on_screen.is_empty())
+	control.visible=camera.current
+	if !camera.current:
+		return
+	
+	if Input.is_action_just_pressed("shoot"):
+		var direc:=gun.global_position
+		if target!=null:
+			direc = target.global_position
+		gun.shoot(direc)
+	
 	if !ships_on_screen.is_empty():
 		var ship:=ships_on_screen[0]
 		target=ship
@@ -103,7 +112,7 @@ func _process(delta: float) -> void:
 	else:
 		target=null
 		crosshair.position=get_viewport().size/2
-	crosshair.visible=camera.current
+	
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -117,6 +126,6 @@ func _on_body_entered(body: Node) -> void:
 		
 
 
-func _on_died() -> void:
-	print("died") # Replace with function body.
-	queue_free()
+func _on_health_update(_max: int, current: int) -> void:
+	if current == 0:
+		queue_free() # Replace with function body.

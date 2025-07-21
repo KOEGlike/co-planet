@@ -6,7 +6,7 @@ extends RigidBody3D
 @export var speed:float=2
 @export var damage:int=5
 
-func _on_body_entered(body: Node) -> void:
+func _on_body_entered(_body: Node) -> void:
 	print("collided")
 	queue_free()
 	

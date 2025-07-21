@@ -13,6 +13,7 @@ emission_energy_multiplier = 3.34
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h1aey"]
 
 [node name="Bullet" type="RigidBody3D"]
+mass = 0.001
 contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("1_mkf8s")
