@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://bicc14jy1ta5b"]
+[gd_scene load_steps=3 format=3 uid="uid://bicc14jy1ta5b"]
 
-[ext_resource type="PackedScene" uid="uid://bbipqfvmkog6o" path="res://scenes/map.tscn" id="2_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://civehd8skdhik" path="res://scenes/ui.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bbipqfvmkog6o" path="res://scenes/map.tscn" id="1_o5qli"]
 
 [sub_resource type="Environment" id="Environment_7dm0k"]
 background_mode = 1
@@ -24,6 +23,4 @@ environment = SubResource("Environment_7dm0k")
 [node name="Ships" type="Node" parent="."]
 unique_name_in_owner = true
 
-[node name="CSGCombiner3D" parent="." instance=ExtResource("2_0xm2m")]
-
-[node name="UI" parent="." instance=ExtResource("3_h2yge")]
+[node name="CSGCombiner3D" parent="." instance=ExtResource("1_o5qli")]

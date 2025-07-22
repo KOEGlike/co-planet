@@ -3,26 +3,28 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
 albedo_color = Color(0, 1, 1, 1)
 
-[node name="CSGCombiner3D" type="CSGCombiner3D"]
+[node name="Map" type="Node"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3808, 2.58532, 9.63105e-08)
 use_collision = true
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3808, 2.58532, 4.77289)
 use_collision = true
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.07684, 2.58532, 9.63105e-08)
 use_collision = true
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099438, -0.198866, 9.48288e-07)
 use_collision = true
 material = SubResource("StandardMaterial3D_ig7tw")
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="."]
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099438, -0.198866, -4.57402)
 use_collision = true

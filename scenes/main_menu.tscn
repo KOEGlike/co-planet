@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://civehd8skdhik"]
 
-[ext_resource type="Script" uid="uid://cqwok4pd7cs46" path="res://scripts/ui.gd" id="1_nt7q6"]
+[ext_resource type="Script" uid="uid://cqwok4pd7cs46" path="res://scripts/main_menu.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="1_x4jx1"]
 
-[node name="UI" type="Control"]
+[node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -29,7 +29,7 @@ offset_bottom = 37.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
+[node name="Name" type="TextEdit" parent="VBoxContainer"]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 placeholder_text = "Name"
@@ -38,20 +38,25 @@ placeholder_text = "Name"
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Host" type="Button" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(70, 30.03)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Host"
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Join" type="Button" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(70, 30.03)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Join"
 
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Start" type="Button" parent="VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(70, 30.03)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Start"
+
+[connection signal="text_changed" from="VBoxContainer/Name" to="." method="_on_name_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Start" to="." method="_on_start_pressed"]

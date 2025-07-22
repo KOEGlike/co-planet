@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="co-planet"
-run/main_scene="uid://bicc14jy1ta5b"
+run/main_scene="uid://civehd8skdhik"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [autoload]
