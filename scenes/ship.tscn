@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://kbih5hymkb5o"]
+[gd_scene load_steps=13 format=3 uid="uid://kbih5hymkb5o"]
 
 [ext_resource type="Script" uid="uid://c3cidquvopei6" path="res://scripts/ship.gd" id="1_2gnfn"]
 [ext_resource type="PackedScene" uid="uid://ygd6s5gcauht" path="res://assets/ship_model.glb" id="1_q631a"]
@@ -11,8 +11,6 @@
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2gnfn"]
 points = PackedVector3Array(5.96046e-08, -5.96046e-08, -1.42536, -0.996745, -5.96046e-08, 0.56246, 5.96046e-08, 0.547715, 0.210271, 0.996745, -5.96046e-08, 0.56246, 5.96046e-08, -0.547716, 0.210271)
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gudjc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gudjc"]
 bg_color = Color(0.6, 0.6, 0.6, 0.184314)
@@ -71,9 +69,9 @@ grow_vertical = 2
 theme = ExtResource("4_3m36u")
 
 [node name="Crosshair" type="Sprite2D" parent="Control"]
-material = SubResource("CanvasItemMaterial_gudjc")
-position = Vector2(956, 556)
-scale = Vector2(15, 15)
+texture_filter = 1
+position = Vector2(626, 366)
+scale = Vector2(10, 10)
 texture = ExtResource("4_tfsc7")
 
 [node name="HealthContainer" type="MarginContainer" parent="Control"]

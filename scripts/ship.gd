@@ -96,7 +96,7 @@ func _process(delta: float) -> void:
 	control.visible=camera.current
 	if !camera.current:
 		return
-	
+			
 	if ships_on_screen.is_empty():
 		target=null
 	
@@ -117,10 +117,8 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion: 
 		var closest:Node3D
 		var dist:float=INF
-		print("mouse: " + str(event.position))
 		for ship in ships_on_screen:
 			var cur_dist:float=event.position.distance_squared_to(camera.unproject_position(ship.global_position))
-			print("cur dist" + str(cur_dist))
 			if cur_dist < dist:
 				dist=cur_dist
 				closest=ship
