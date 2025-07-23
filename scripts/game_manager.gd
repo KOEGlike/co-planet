@@ -11,24 +11,27 @@ const PORT := 7000
 const DEFAULT_SERVER_IP := "127.0.0.1" # IPv4 localhost
 const MAX_CONNECTIONS := 20
 
+class PlayerInfo:
+	var name:String="defa"
+
 # This will contain player info for every player,
 # with the keys being each player's unique IDs.
-var players :Dictionary[int,PlayerInfo]= {}
+var players:Dictionary[int, PlayerInfo]= {}
+
+var ships:Dictionary[int,Ship]={}
 
 # This is the local player info. This should be modified locally
 # before the connection is made. It will be passed to every other peer.
 # For example, the value of "name" can be set to something the player
 # entered in a UI scene.
-class PlayerInfo:
-	func _init(name:String):
-		self.name=name
-	var name:String
 
-var player_info :=PlayerInfo.new("default") 
+
+var player_info :=PlayerInfo.new()
 
 var players_loaded := 0
 
-
+static func _static_init() -> void:
+	ObjectSerializer.register_script("PlayerInfo", PlayerInfo)
 
 func _ready():
 	multiplayer.allow_object_decoding = true
@@ -68,17 +71,19 @@ func remove_multiplayer_peer():
 # When the server decides to start the game from a UI scene,
 # do Lobby.load_game.rpc(filepath)
 @rpc("call_local", "reliable")
-func load_game(game_scene_path:String):
+func load_game_rpc(game_scene_path:String):
 	get_tree().change_scene_to_file(game_scene_path)
 
 
 # Every peer will call this when they have loaded the game scene.
 @rpc("any_peer", "call_local", "reliable")
-func player_loaded():
+func player_ready_rpc():
 	if multiplayer.is_server():
 		players_loaded += 1
+		print("added " + str(players_loaded))
 		if players_loaded == players.size():
-			$/root/Game.start_game()
+			print("load game")
+			load_game_rpc.rpc("res://scenes/main.tscn")
 			players_loaded = 0
 
 
@@ -86,13 +91,23 @@ func player_loaded():
 # This allows transfer of all desired data for each player, not only the unique ID.
 func _on_player_connected(id:int):
 	print("connected " + str(id))
-	_register_player.rpc_id(id, player_info)
+	_register_player(player_info,id)
 
+func _register_player(new_player_info: PlayerInfo,id:int=0) -> void:
+	var json:=DictionarySerializer.serialize_json(new_player_info)
+	if id==0:
+		_register_player_rpc.rpc(json)
+	else:
+		_register_player_rpc.rpc_id(id, json)
+	
+	
 
 @rpc("any_peer", "reliable")
-func _register_player(new_player_info:PlayerInfo):
+func _register_player_rpc(new_player_info_json):
+	var new_player_info:PlayerInfo=DictionarySerializer.deserialize_json(new_player_info_json)
+	
 	var new_player_id := multiplayer.get_remote_sender_id()
-	players[new_player_id] = new_player_info
+	players[new_player_id]= new_player_info
 	player_connected.emit(new_player_id, new_player_info)
 
 
@@ -115,3 +130,4 @@ func _on_server_disconnected():
 	multiplayer.multiplayer_peer = null
 	players.clear()
 	server_disconnected.emit()
+	

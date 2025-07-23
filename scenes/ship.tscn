@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://kbih5hymkb5o"]
+[gd_scene load_steps=14 format=3 uid="uid://kbih5hymkb5o"]
 
 [ext_resource type="Script" uid="uid://c3cidquvopei6" path="res://scripts/ship.gd" id="1_2gnfn"]
 [ext_resource type="PackedScene" uid="uid://ygd6s5gcauht" path="res://assets/ship_model.glb" id="1_q631a"]
@@ -32,6 +32,17 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8qiel"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Ship" type="RigidBody3D"]
 transform = Transform3D(-5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 0, 0, 0)
@@ -135,6 +146,9 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("8_8qiel")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_8qiel")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="health_update" from="." to="." method="_on_health_update"]

@@ -4,11 +4,13 @@ extends RigidBody3D
 
 @onready var camera: Camera3D = $Camera3D
 @onready var gun: Gun = $Gun
-@onready var ships: Node = %Ships
 @onready var crosshair: Sprite2D = $Control/Crosshair
 @onready var control: Control = $Control
+@onready var multiplayer_synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 
 signal health_update(max:int, current:int)
+
+@export var id:int=0
 
 @export var max_health:=100
 
@@ -37,35 +39,26 @@ var dir:float=0
 
 var ships_on_screen:Array[Ship]=[]
 
-func on_new_ship(node:Node) ->void:
-	if node is Ship and node != self:
-		var ship:Ship=node
-		var visiblity:VisibleOnScreenNotifier3D=ship.get_node("VisibleOnScreen")
-		
-		var on_ship_entered_screen:=func():
-			ships_on_screen.append(ship)
-			print(ship.name + " entered")
-			print(ships_on_screen)
-		visiblity.screen_entered.connect(on_ship_entered_screen)
-		
-		var on_ship_exited_screen:=func():
-			ships_on_screen.erase(ship)
-			print(ship.name + "exited")
-			print(ships_on_screen)
-		visiblity.screen_exited.connect(on_ship_exited_screen)
-		
-func on_ship_exit(node:Node) ->void:
-	if node is Ship and node != self:
-		ships_on_screen.erase(node)
-
-func _ready() -> void:
-	ships.child_entered_tree.connect(on_new_ship)
-	ships.child_exiting_tree.connect(on_ship_exit)
-	for child in ships.get_children():
-		on_new_ship(child)
+func _ready() -> void:	
+	multiplayer_synchronizer.set_multiplayer_authority(id, true)
+	gun.id=id
+	
+	get_tree().root.ready.connect(
+		func():
+			print("xdd")
+			for i in Manager.ships:
+				print("lala " + str(i))
+				var ship:Ship=Manager.ships[i]
+				on_new_ship(ship)
+				var calb:=func():
+					on_ship_exit(ship)
+				Manager.ships[i].tree_exiting.connect(calb)
+	)
+	
+	
 	
 func _physics_process(delta: float) -> void:
-	if !camera.current:
+	if id != multiplayer.get_unique_id():
 		return
 	
 	global_rotation.z=0
@@ -89,12 +82,13 @@ func _physics_process(delta: float) -> void:
 	camera.global_position = lerp(camera.global_position, camera_position, delta*rotation_speed)
 	
 	var current_rotation := Quaternion(camera.global_transform.basis)
-	var next_rotation := current_rotation.slerp(Quaternion(self.global_transform.basis), delta*pitch_speed)
+	var next_rotation := current_rotation.slerp(self.global_transform.basis.get_rotation_quaternion(), delta*pitch_speed)
 	camera.basis = Basis(next_rotation)
 
 func _process(delta: float) -> void:
-	control.visible=camera.current
-	if !camera.current:
+	control.visible = id == multiplayer.get_unique_id()
+	camera.current = id == multiplayer.get_unique_id()
+	if id != multiplayer.get_unique_id():
 		return
 			
 	if ships_on_screen.is_empty():
@@ -112,8 +106,31 @@ func _process(delta: float) -> void:
 	else:
 		crosshair.position=get_viewport().size/2
 	
+func on_new_ship(node:Ship) ->void:
+	if node != self:
+		var ship:Ship=node
+		var visiblity:VisibleOnScreenNotifier3D=ship.get_node("VisibleOnScreen")
+		
+		var on_ship_entered_screen:=func():
+			ships_on_screen.append(ship)
+			print(ship.name + " entered")
+			print(ships_on_screen)
+		visiblity.screen_entered.connect(on_ship_entered_screen)
+		
+		var on_ship_exited_screen:=func():
+			ships_on_screen.erase(ship)
+			print(ship.name + "exited")
+			print(ships_on_screen)
+		visiblity.screen_exited.connect(on_ship_exited_screen)
+		
+func on_ship_exit(node:Ship) ->void:
+	if node is Ship and node != self:
+		ships_on_screen.erase(node)
 
 func _input(event: InputEvent) -> void:
+	if id != multiplayer.get_unique_id():
+		return
+	
 	if event is InputEventMouseMotion: 
 		var closest:Node3D
 		var dist:float=INF

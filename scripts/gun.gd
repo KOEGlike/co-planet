@@ -3,6 +3,7 @@ class_name Gun
 extends Node3D
 
 const BULLET_SCENE:=preload("res://scenes/bullet.tscn")
+@onready var multiplayer_spawner: MultiplayerSpawner = $MultiplayerSpawner
 
 signal mag_update(mag_size:int, current:int)
 
@@ -13,6 +14,8 @@ signal mag_update(mag_size:int, current:int)
 @export var reload_time:=0.5
 
 @onready var timer: Timer = $Timer
+
+var id:int
 
 var mag:=mag_size:
 	set(val):
@@ -26,19 +29,32 @@ var mag:=mag_size:
 func _ready() -> void:
 	timer.wait_time=reload_time
 	mag=mag_size
+	
+	multiplayer_spawner.spawn_function=func(data):
+		print("kaka")
+		var bullet:Bullet=BULLET_SCENE.instantiate()
+		bullet.set_name("bullet" + str(get_child_count()+1))
+		bullet.position.z-=0.1
+		
+		bullet.target=data["target"]
+		bullet.speed=data["bullet_speed"]
+		bullet.damage=data["bullet_damage"]
+		print("dddd " + str(bullet))
+		return bullet
 
 func shoot(target: Vector3):
 	if mag<=0:
 		return
 	
 	mag-=1
-	var bullet:=BULLET_SCENE.instantiate()
-	bullet.set_name("bullet" + str(get_child_count()+1))
-	bullet.target=target
-	bullet.speed=bullet_speed
-	bullet.position.z-=0.1
-	bullet.damage=bullet_damage
-	add_child(bullet)
+	
+	var dict:={}
+	dict["target"]=target
+	dict["bullet_speed"]=bullet_speed
+	dict["bullet_damage"]=bullet_damage
+	
+	var bullet=multiplayer_spawner.spawn(dict)
+	print(bullet)
 	bullet.top_level=true
 	print("shot")
 

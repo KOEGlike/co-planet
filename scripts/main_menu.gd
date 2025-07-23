@@ -15,5 +15,5 @@ func _on_join_pressed() -> void:
 	Manager.join_game()
 
 
-func _on_start_pressed() -> void:
-	Manager.load_game("res://scenes/main.tscn")
+func _on_ready_pressed() -> void:
+	Manager.player_ready_rpc.rpc()
