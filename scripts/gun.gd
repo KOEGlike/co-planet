@@ -15,8 +15,6 @@ signal mag_update(mag_size:int, current:int)
 
 @onready var timer: Timer = $Timer
 
-var id:int
-
 var mag:=mag_size:
 	set(val):
 		if val<0:
@@ -31,7 +29,6 @@ func _ready() -> void:
 	mag=mag_size
 	
 	multiplayer_spawner.spawn_function=func(data):
-		print("kaka")
 		var bullet:Bullet=BULLET_SCENE.instantiate()
 		bullet.set_name("bullet" + str(get_child_count()+1))
 		bullet.position.z-=0.1
@@ -39,7 +36,6 @@ func _ready() -> void:
 		bullet.target=data["target"]
 		bullet.speed=data["bullet_speed"]
 		bullet.damage=data["bullet_damage"]
-		print("dddd " + str(bullet))
 		return bullet
 
 func shoot(target: Vector3):
@@ -54,11 +50,13 @@ func shoot(target: Vector3):
 	dict["bullet_damage"]=bullet_damage
 	
 	var bullet=multiplayer_spawner.spawn(dict)
-	print(bullet)
 	bullet.top_level=true
-	print("shot")
 
 
 func _on_timer_timeout() -> void:
 	if mag<mag_size:
 		mag+=1
+
+
+func _on_tree_entered() -> void:
+	pass # Replace with function body.

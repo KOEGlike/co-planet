@@ -12,6 +12,8 @@ func _on_body_entered(_body: Node) -> void:
 	
 func _ready() -> void:
 		self.look_at(target)
+		self.top_level=true
 	
 func _physics_process(delta: float) -> void:
 	global_position+=-global_basis.z*speed*delta
+	

@@ -23,3 +23,6 @@ shadow_enabled = true
 environment = SubResource("Environment_7dm0k")
 
 [node name="CSGCombiner3D" parent="." instance=ExtResource("1_o5qli")]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")

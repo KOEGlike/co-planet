@@ -41,7 +41,7 @@ var ships_on_screen:Array[Ship]=[]
 
 func _ready() -> void:	
 	multiplayer_synchronizer.set_multiplayer_authority(id, true)
-	gun.id=id
+	gun.multiplayer_spawner.set_multiplayer_authority(id, true)
 	
 	get_tree().root.ready.connect(
 		func():
