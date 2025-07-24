@@ -1,6 +1,7 @@
 extends Control
 
 @onready var name_field: TextEdit = $VBoxContainer/Name
+@onready var port: TextEdit = $VBoxContainer/TabContainer/Host/HBoxContainer/Port
 
 
 func _on_name_text_changed() -> void:
@@ -8,7 +9,10 @@ func _on_name_text_changed() -> void:
 
 
 func _on_host_pressed() -> void:
-	Manager.create_game()
+	if port.text.is_empty():
+		Manager.create_game()
+	else:
+		Manager.create_game(int(port.text))
 
 
 func _on_join_pressed() -> void:

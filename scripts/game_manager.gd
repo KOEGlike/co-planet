@@ -3,15 +3,15 @@ extends Node
 # Autoload named Lobby
 
 # These signals can be connected to by a UI lobby scene or the game scene.
-signal player_connected(peer_id, player_info)
-signal player_disconnected(peer_id)
+signal player_connected(peer_id:int, player_info:PlayerInfo)
+signal player_disconnected(peer_id:int)
 signal server_disconnected
 
 signal ship_spawned(ship:Ship)
 signal ship_despawned(ship:Ship)
 signal all_players_loaded
 
-const PORT := 7000
+const DEFAULT_PORT := 7000
 const DEFAULT_SERVER_IP := "127.0.0.1" # IPv4 localhost
 const MAX_CONNECTIONS := 20
 
@@ -48,19 +48,18 @@ func _ready():
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
-func join_game(address := ""):
-	if address.is_empty():
-		address = DEFAULT_SERVER_IP
+func join_game(address := DEFAULT_SERVER_IP, port:=DEFAULT_PORT):
+	
 	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_client(address, PORT)
+	var error := peer.create_client(address, port)
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer
 
 
-func create_game():
+func create_game(port:=DEFAULT_PORT):
 	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_server(PORT, MAX_CONNECTIONS)
+	var error := peer.create_server(port, MAX_CONNECTIONS)
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer

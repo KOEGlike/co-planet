@@ -5,9 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://8ehaqiq45s0h" path="res://scenes/gun.tscn" id="3_4tobq"]
 [ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="4_3m36u"]
 [ext_resource type="Texture2D" uid="uid://cjrt5b8br7cuv" path="res://assets/pixil-frame-0.png" id="4_tfsc7"]
-[ext_resource type="Script" uid="uid://cxfebhkj30srm" path="res://scripts/health.gd" id="5_gudjc"]
-[ext_resource type="Script" uid="uid://c6vdap40ay4r6" path="res://scripts/mag.gd" id="6_7j21i"]
-[ext_resource type="Script" uid="uid://c6iydvpll8v17" path="res://scripts/mag_label.gd" id="8_8qiel"]
+[ext_resource type="Script" uid="uid://cxfebhkj30srm" path="res://scripts/UI/health.gd" id="5_gudjc"]
+[ext_resource type="Script" uid="uid://c6vdap40ay4r6" path="res://scripts/UI/mag.gd" id="6_7j21i"]
+[ext_resource type="Script" uid="uid://c6iydvpll8v17" path="res://scripts/UI/mag_label.gd" id="8_8qiel"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2gnfn"]
 points = PackedVector3Array(5.96046e-08, -5.96046e-08, -1.42536, -0.996745, -5.96046e-08, 0.56246, 5.96046e-08, 0.547715, 0.210271, 0.996745, -5.96046e-08, 0.56246, 5.96046e-08, -0.547716, 0.210271)
