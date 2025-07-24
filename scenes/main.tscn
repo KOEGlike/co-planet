@@ -26,3 +26,6 @@ environment = SubResource("Environment_7dm0k")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
+
+[connection signal="despawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_despawned"]
+[connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]

@@ -43,17 +43,17 @@ func _ready() -> void:
 	multiplayer_synchronizer.set_multiplayer_authority(id, true)
 	gun.multiplayer_spawner.set_multiplayer_authority(id, true)
 	
-	get_tree().root.ready.connect(
-		func():
-			print("xdd")
-			for i in Manager.ships:
-				print("lala " + str(i))
-				var ship:Ship=Manager.ships[i]
-				on_new_ship(ship)
-				var calb:=func():
-					on_ship_exit(ship)
-				Manager.ships[i].tree_exiting.connect(calb)
-	)
+	Manager.ship_spawned.connect(on_new_ship)
+	Manager.ship_despawned.connect(on_ship_exit)
+	
+	for i in Manager.ships:
+		print("lala " + str(i))
+		var ship:Ship=Manager.ships[i]
+		on_new_ship(ship)
+		var calb:=func():
+			on_ship_exit(ship)
+		Manager.ships[i].tree_exiting.connect(calb)
+	
 	
 	
 	
@@ -100,6 +100,8 @@ func _process(delta: float) -> void:
 			direc = target.global_position
 		gun.shoot(direc)
 	
+	closest_to_mouse(get_viewport().get_mouse_position())
+	
 	if target!=null:
 		var pos:=camera.unproject_position(target.global_position)
 		crosshair.position=lerp(crosshair.position, pos, 0.3)
@@ -127,21 +129,15 @@ func on_ship_exit(node:Ship) ->void:
 	if node is Ship and node != self:
 		ships_on_screen.erase(node)
 
-func _input(event: InputEvent) -> void:
-	if id != multiplayer.get_unique_id():
-		return
-	
-	if event is InputEventMouseMotion: 
+func closest_to_mouse(pos:Vector2) -> void:
 		var closest:Node3D
 		var dist:float=INF
 		for ship in ships_on_screen:
-			var cur_dist:float=event.position.distance_squared_to(camera.unproject_position(ship.global_position))
+			var cur_dist:float=pos.distance_squared_to(camera.unproject_position(ship.global_position))
 			if cur_dist < dist:
 				dist=cur_dist
 				closest=ship
 		target=closest
-		
-		
 
 
 func _on_body_entered(body: Node) -> void:

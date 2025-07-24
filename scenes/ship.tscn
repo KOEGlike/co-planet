@@ -47,6 +47,7 @@ properties/2/replication_mode = 1
 [node name="Ship" type="RigidBody3D"]
 transform = Transform3D(-5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 0, 0, 0)
 mass = 10.0
+continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 10
 script = ExtResource("1_2gnfn")

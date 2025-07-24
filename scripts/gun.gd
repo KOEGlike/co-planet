@@ -36,6 +36,7 @@ func _ready() -> void:
 		bullet.target=data["target"]
 		bullet.speed=data["bullet_speed"]
 		bullet.damage=data["bullet_damage"]
+		bullet.id=data["id"]
 		return bullet
 
 func shoot(target: Vector3):
@@ -48,6 +49,7 @@ func shoot(target: Vector3):
 	dict["target"]=target
 	dict["bullet_speed"]=bullet_speed
 	dict["bullet_damage"]=bullet_damage
+	dict["id"]=multiplayer_spawner.get_multiplayer_authority()
 	
 	var bullet=multiplayer_spawner.spawn(dict)
 	bullet.top_level=true

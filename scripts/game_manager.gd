@@ -7,7 +7,9 @@ signal player_connected(peer_id, player_info)
 signal player_disconnected(peer_id)
 signal server_disconnected
 
-signal players_spawned
+signal ship_spawned(ship:Ship)
+signal ship_despawned(ship:Ship)
+signal all_players_loaded
 
 const PORT := 7000
 const DEFAULT_SERVER_IP := "127.0.0.1" # IPv4 localhost
@@ -30,7 +32,9 @@ var ships:Dictionary[int,Ship]={}
 
 var player_info :=PlayerInfo.new()
 
-var players_loaded := 0
+var players_ready := 0
+
+var players_loaded :={}
 
 static func _static_init() -> void:
 	ObjectSerializer.register_script("PlayerInfo", PlayerInfo)
@@ -81,12 +85,20 @@ func load_game_rpc(game_scene_path:String):
 @rpc("any_peer", "call_local", "reliable")
 func player_ready_rpc():
 	if multiplayer.is_server():
-		players_loaded += 1
-		print("added " + str(players_loaded))
-		if players_loaded == players.size():
+		players_ready += 1
+		print("added " + str(players_ready))
+		if players_ready == players.size():
 			print("load game")
 			load_game_rpc.rpc("res://scenes/main.tscn")
-			players_loaded = 0
+			players_ready = 0
+	
+@rpc("any_peer", "call_local", "reliable")		
+func player_loaded_rpc(id:int):
+	players_loaded[id]=null
+	if players_loaded.size() == players.size():
+		all_players_loaded.emit()
+	
+	
 
 
 # When a peer connects, send them my player info.

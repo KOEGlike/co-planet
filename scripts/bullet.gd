@@ -6,9 +6,15 @@ extends RigidBody3D
 @export var speed:float=2
 @export var damage:int=5
 
+@onready var multiplayer_synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
+
+var id:int
+
 func _on_body_entered(_body: Node) -> void:
-	print("collided")
-	queue_free()
+	if id==multiplayer.get_unique_id():
+		print("collided")
+		multiplayer_synchronizer.public_visibility=false
+		queue_free()
 	
 func _ready() -> void:
 		self.look_at(target)

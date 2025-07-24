@@ -28,6 +28,7 @@ properties/3/replication_mode = 1
 
 [node name="Bullet" type="RigidBody3D"]
 mass = 0.001
+continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("1_mkf8s")
