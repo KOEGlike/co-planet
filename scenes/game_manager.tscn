@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://cswp2bsr2ybv8"]
+[gd_scene load_steps=3 format=3 uid="uid://cswp2bsr2ybv8"]
 
 [ext_resource type="Script" uid="uid://ugixoqpcreeh" path="res://scripts/game_manager.gd" id="1_hwd4i"]
+[ext_resource type="Script" uid="uid://bio0tbmxeu84h" path="res://multiplayer/multiplayer_client.gd" id="2_glms7"]
 
 [node name="GameManager" type="Node"]
 script = ExtResource("1_hwd4i")
+
+[node name="MuliplayerClient" type="Node" parent="."]
+script = ExtResource("2_glms7")

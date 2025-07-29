@@ -1,7 +1,7 @@
 extends Node
 
 # Autoload named Lobby
-
+@onready var muliplayer_client: MultiplayerClient = $MuliplayerClient
 # These signals can be connected to by a UI lobby scene or the game scene.
 signal player_connected(peer_id:int, player_info:PlayerInfo)
 signal player_disconnected(peer_id:int)
@@ -11,29 +11,15 @@ signal ship_spawned(ship:Ship)
 signal ship_despawned(ship:Ship)
 signal all_players_loaded
 
-const DEFAULT_PORT := 7000
-const DEFAULT_SERVER_IP := "127.0.0.1" # IPv4 localhost
-const MAX_CONNECTIONS := 20
-
 class PlayerInfo:
 	var name:String="defa"
 
-# This will contain player info for every player,
-# with the keys being each player's unique IDs.
 var players:Dictionary[int, PlayerInfo]= {}
-
 var ships:Dictionary[int,Ship]={}
-
-# This is the local player info. This should be modified locally
-# before the connection is made. It will be passed to every other peer.
-# For example, the value of "name" can be set to something the player
-# entered in a UI scene.
-
 
 var player_info :=PlayerInfo.new()
 
 var players_ready := 0
-
 var players_loaded :={}
 
 static func _static_init() -> void:
@@ -48,30 +34,8 @@ func _ready():
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
-func join_game(address := DEFAULT_SERVER_IP, port:=DEFAULT_PORT):
-	
-	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_client(address, port)
-	if error:
-		return error
-	multiplayer.multiplayer_peer = peer
-
-
-func create_game(port:=DEFAULT_PORT):
-	var peer := ENetMultiplayerPeer.new()
-	var error := peer.create_server(port, MAX_CONNECTIONS)
-	if error:
-		return error
-	multiplayer.multiplayer_peer = peer
-
-	players[1] = player_info
-	player_connected.emit(1, player_info)
-
-
-func remove_multiplayer_peer():
-	multiplayer.multiplayer_peer = null
-	players.clear()
-
+func join_game(lobby:String):
+	muliplayer_client.start(lobby)
 
 # When the server decides to start the game from a UI scene,
 # do Lobby.load_game.rpc(filepath)
