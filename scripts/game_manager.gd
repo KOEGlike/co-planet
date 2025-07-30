@@ -67,7 +67,7 @@ func player_loaded_rpc(id:int):
 # When a peer connects, send them my player info.
 # This allows transfer of all desired data for each player, not only the unique ID.
 func _on_player_connected(id:int):
-	print("connected " + str(id))
+	print("connected " + str(id) + " self:" + str(multiplayer.get_unique_id()))
 	_register_player(player_info,id)
 
 func _register_player(new_player_info: PlayerInfo,id:int=0) -> void:

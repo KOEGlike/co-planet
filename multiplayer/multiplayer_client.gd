@@ -41,8 +41,7 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 	peer.session_description_created.connect(_offer_created.bind(id))
 	peer.ice_candidate_created.connect(_new_ice_candidate.bind(id))
 	rtc_mp.add_peer(peer, id)
-	if id < rtc_mp.get_unique_id():  # So lobby creator never creates offers.
-		peer.create_offer()
+	peer.create_offer()
 	return peer
 	
 func _new_ice_candidate(mid_name: String, index_name: int, sdp_name: String, id: int) -> void:
@@ -50,8 +49,9 @@ func _new_ice_candidate(mid_name: String, index_name: int, sdp_name: String, id:
 
 func _offer_created(type: String, data: String, id: int) -> void:
 	if not rtc_mp.has_peer(id):
+		print("peer doesnt exist: ",str(id))
 		return
-	print("created", type)
+	print("created: ", type, " uni: " + str(multiplayer.get_unique_id()))
 	rtc_mp.get_peer(id).connection.set_local_description(type, data)
 	if type == "offer": send_offer(id, data)
 	else: send_answer(id, data)
@@ -67,6 +67,9 @@ func _lobby_joined(id:int, _lobby: String, use_mesh:bool) -> void:
 		rtc_mp.create_client(id)
 	
 	multiplayer.multiplayer_peer = rtc_mp
+	
+	print("unique id" + str(multiplayer.get_unique_id()), " is server:", str(multiplayer.is_server()))
+	
 	lobby = _lobby
 
 
@@ -75,7 +78,7 @@ func _disconnected() -> void:
 
 
 func _peer_connected(id: int) -> void:
-	print("Peer connected: %d" % id)
+	print("Peer connected: %d uni:" % id + str(multiplayer.get_unique_id()))
 	_create_peer(id)
 
 
