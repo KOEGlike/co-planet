@@ -33,6 +33,11 @@ grow_vertical = 2
 [node name="LobbyID" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 
+[node name="copy" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(70, 30.03)
+layout_mode = 2
+text = "copy"
+
 [node name="Name" type="TextEdit" parent="VBoxContainer"]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
@@ -53,12 +58,13 @@ text = "Join"
 [node name="Ready" type="Button" parent="VBoxContainer"]
 custom_minimum_size = Vector2(70, 30.03)
 layout_mode = 2
-text = "Ready"
+text = "ready"
 
 [node name="Players" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 script = ExtResource("3_bqqt6")
 
+[connection signal="pressed" from="VBoxContainer/copy" to="." method="_on_copy_pressed"]
 [connection signal="text_changed" from="VBoxContainer/Name" to="." method="_on_name_text_changed"]
 [connection signal="pressed" from="VBoxContainer/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="VBoxContainer/Ready" to="." method="_on_ready_pressed"]

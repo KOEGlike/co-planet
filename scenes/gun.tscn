@@ -9,7 +9,7 @@ script = ExtResource("1_x77fm")
 wait_time = 0.25
 autostart = true
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 
 [connection signal="tree_entered" from="." to="." method="_on_tree_entered"]

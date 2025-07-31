@@ -3,7 +3,7 @@ class_name Gun
 extends Node3D
 
 const BULLET_SCENE:=preload("res://scenes/bullet.tscn")
-@onready var multiplayer_spawner: MultiplayerSpawner = $MultiplayerSpawner
+@onready var bullet_spawner: MultiplayerSpawner = $BulletSpawner
 
 signal mag_update(mag_size:int, current:int)
 
@@ -28,7 +28,7 @@ func _ready() -> void:
 	timer.wait_time=reload_time
 	mag=mag_size
 	
-	multiplayer_spawner.spawn_function=func(data):
+	bullet_spawner.spawn_function=func(data):
 		var bullet:Bullet=BULLET_SCENE.instantiate()
 		bullet.set_name("bullet" + str(get_child_count()+1))
 		bullet.position.z-=0.1
@@ -49,9 +49,9 @@ func shoot(target: Vector3):
 	dict["target"]=target
 	dict["bullet_speed"]=bullet_speed
 	dict["bullet_damage"]=bullet_damage
-	dict["id"]=multiplayer_spawner.get_multiplayer_authority()
+	dict["id"]=bullet_spawner.get_multiplayer_authority()
 	
-	var bullet=multiplayer_spawner.spawn(dict)
+	var bullet=bullet_spawner.spawn(dict)
 	bullet.top_level=true
 
 

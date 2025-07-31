@@ -5,7 +5,6 @@ const ship_scene := preload("res://scenes/ship.tscn")
 @onready var multiplayer_spawner: MultiplayerSpawner = $MultiplayerSpawner
 
 func _ready() -> void:
-	multiplayer_spawner.set_multiplayer_authority(1)
 	multiplayer_spawner.spawn_function=func(data):
 		var id=data["id"]
 		var ship_instace:Ship=ship_scene.instantiate()
@@ -19,6 +18,7 @@ func _ready() -> void:
 	Manager.all_players_loaded.connect(func():
 		if multiplayer.is_server():
 			for id in Manager.players:
+				print("spawning player: ",str(id))
 				var data={}
 				data["id"]=id
 				var ship:Ship=multiplayer_spawner.spawn(data)

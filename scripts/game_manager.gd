@@ -3,7 +3,7 @@ extends Node
 # Autoload named Lobby
 @onready var muliplayer_client: MultiplayerClient = $MuliplayerClient
 # These signals can be connected to by a UI lobby scene or the game scene.
-signal player_connected(peer_id:int, player_info:PlayerInfo)
+signal player_connected(peer_id:int, player_info:Dictionary)
 signal player_disconnected(peer_id:int)
 signal server_disconnected
 
@@ -11,19 +11,17 @@ signal ship_spawned(ship:Ship)
 signal ship_despawned(ship:Ship)
 signal all_players_loaded
 
-class PlayerInfo:
-	var name:String="defa"
 
-var players:Dictionary[int, PlayerInfo]= {}
+var players:Dictionary[int, Dictionary]= {}
 var ships:Dictionary[int,Ship]={}
 
-var player_info :=PlayerInfo.new()
+var player_info :={
+	"name":"defa"
+}
 
 var players_ready := 0
 var players_loaded :={}
 
-static func _static_init() -> void:
-	ObjectSerializer.register_script("PlayerInfo", PlayerInfo)
 
 func _ready():
 	multiplayer.allow_object_decoding = true
@@ -62,26 +60,21 @@ func player_loaded_rpc(id:int):
 		all_players_loaded.emit()
 	
 	
-
+@rpc("any_peer", "call_local", "reliable")
+func test_rpc():
+	print("rpc test: ", multiplayer.get_unique_id())
 
 # When a peer connects, send them my player info.
 # This allows transfer of all desired data for each player, not only the unique ID.
 func _on_player_connected(id:int):
-	print("connected " + str(id) + " self:" + str(multiplayer.get_unique_id()))
-	_register_player(player_info,id)
-
-func _register_player(new_player_info: PlayerInfo,id:int=0) -> void:
-	var json:=DictionarySerializer.serialize_json(new_player_info)
-	if id==0:
-		_register_player_rpc.rpc(json)
-	else:
-		_register_player_rpc.rpc_id(id, json)
-	
-	
+	if not players.has(multiplayer.get_unique_id()):
+		print("not has")
+		_on_connected_ok()
+	print("rtc connected " + str(id) + " self:" + str(multiplayer.get_unique_id()))
+	_register_player_rpc.rpc_id(id, player_info)
 
 @rpc("any_peer", "reliable")
-func _register_player_rpc(new_player_info_json):
-	var new_player_info:PlayerInfo=DictionarySerializer.deserialize_json(new_player_info_json)
+func _register_player_rpc(new_player_info: Dictionary):
 	
 	var new_player_id := multiplayer.get_remote_sender_id()
 	players[new_player_id]= new_player_info
@@ -94,6 +87,7 @@ func _on_player_disconnected(id):
 
 
 func _on_connected_ok():
+	print("connected ok, self register: ", multiplayer.get_unique_id())
 	var peer_id = multiplayer.get_unique_id()
 	players[peer_id] = player_info
 	player_connected.emit(peer_id, player_info)

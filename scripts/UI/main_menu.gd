@@ -22,3 +22,7 @@ func _on_ready_pressed() -> void:
 
 
  # Replace with function body.
+
+
+func _on_copy_pressed() -> void:
+	DisplayServer.clipboard_set(lobby_id.text)

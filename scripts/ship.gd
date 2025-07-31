@@ -6,7 +6,7 @@ extends RigidBody3D
 @onready var gun: Gun = $Gun
 @onready var crosshair: Sprite2D = $Control/Crosshair
 @onready var control: Control = $Control
-@onready var multiplayer_synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
+@onready var ship_synchronizer: MultiplayerSynchronizer = $ShipSynchronizer
 
 signal health_update(max:int, current:int)
 
@@ -39,9 +39,9 @@ var dir:float=0
 
 var ships_on_screen:Array[Ship]=[]
 
-func _ready() -> void:	
-	multiplayer_synchronizer.set_multiplayer_authority(id, true)
-	gun.multiplayer_spawner.set_multiplayer_authority(id, true)
+func _ready() -> void:
+	gun.bullet_spawner.set_multiplayer_authority(id)
+	ship_synchronizer.set_multiplayer_authority(id)
 	
 	Manager.ship_spawned.connect(on_new_ship)
 	Manager.ship_despawned.connect(on_ship_exit)
