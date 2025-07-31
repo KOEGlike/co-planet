@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://duua57vevo65"
+path.s3tc="res://.godot/imported/Asteroid_2c_Asteroid2c_Color_2K.png-cb92155f7812b2425b9f91037db96c39.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "51032a815706908f3fe2ccedd18a98dc"
+}
+
+[deps]
+
+source_file="res://assets/asteroids/2c/Asteroid_2c_Asteroid2c_Color_2K.png"
+dest_files=["res://.godot/imported/Asteroid_2c_Asteroid2c_Color_2K.png-cb92155f7812b2425b9f91037db96c39.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

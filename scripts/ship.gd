@@ -149,4 +149,6 @@ func _on_body_entered(body: Node) -> void:
 
 func _on_health_update(_max: int, current: int) -> void:
 	if current == 0:
-		queue_free() # Replace with function body.
+		global_position=Vector3(randf_range(-10, 10),randf_range(-10, 10),randf_range(-10, 10))
+		health=max_health
+		

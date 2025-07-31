@@ -58,7 +58,7 @@ shape = SubResource("ConvexPolygonShape3D_2gnfn")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(-4.37114e-08, 0.471828, -0.881691, 0, 0.881691, 0.471828, 1, 2.06242e-08, -3.85399e-08, -1.8, 1.7, 4.47035e-08)
+transform = Transform3D(-4.37114e-08, 0.56987, -0.881691, 0, 1.0649, 0.471828, 1, 2.49098e-08, -3.85399e-08, -2.06379, 1.84116, 3.3173e-08)
 top_level = true
 fov = 90.0
 
