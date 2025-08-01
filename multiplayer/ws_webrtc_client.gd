@@ -34,7 +34,7 @@ func _process(_delta: float) -> void:
 	ws.poll()
 	var state := ws.get_ready_state()
 	if state != old_state and state == WebSocketPeer.STATE_OPEN and autojoin:
-		join_lobby(lobby)
+		join_lobby(lobby, mesh)
 	while state == WebSocketPeer.STATE_OPEN and ws.get_available_packet_count():
 		if not _parse_msg():
 			print("Error parsing message from server.")
@@ -124,13 +124,22 @@ func _parse_msg() -> bool:
 	
 	return true
 	
-func join_lobby(lobby: String) -> Error:
+
+func join_lobby(lobby: String, mesh:bool) -> Error:
 	var dict:={
-		"type":"join"	
+		"type":"join"
 	}
 	
-	if not lobby.is_empty():
-		dict["lobby_id"]=lobby
+	var id={}
+	
+	if lobby.is_empty():
+		id["type"]="create"
+		id["mesh"]=mesh
+	else:
+		id["type"]="existing"
+		id["id"]=lobby
+	
+	dict["lobby_id"]=id
 	
 	return ws.send_text(JSON.stringify(dict))
 

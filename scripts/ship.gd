@@ -10,8 +10,6 @@ extends RigidBody3D
 
 signal health_update(max:int, current:int)
 
-@export var id:int=0
-
 @export var max_health:=100
 
 var health:=max_health:
@@ -20,6 +18,8 @@ var health:=max_health:
 			val=0
 		health_update.emit(max_health, val)
 		health=val
+	get():
+		return health;
 
 @export_category("camera")
 @export var camera_offset :=Vector3(-3, 1, 2)
@@ -36,7 +36,7 @@ var health:=max_health:
 @export var target:Node3D=null
 
 var dir:float=0
-
+var id:int=0
 var ships_on_screen:Array[Ship]=[]
 
 func _ready() -> void:
@@ -141,14 +141,15 @@ func closest_to_mouse(pos:Vector2) -> void:
 
 
 func _on_body_entered(body: Node) -> void:
-	if body is Bullet:
+	if id == multiplayer.get_unique_id() and body is Bullet:
 		health-=body.damage
 		print("got " + str(body.damage) + "damage; health: " + str(health))
 		
 
 
 func _on_health_update(_max: int, current: int) -> void:
-	if current == 0:
+	if id == multiplayer.get_unique_id() and current == 0:
 		global_position=Vector3(randf_range(-10, 10),randf_range(-10, 10),randf_range(-10, 10))
 		health=max_health
+		print("died, new health: ", str(health))
 		

@@ -11,12 +11,15 @@ signal ship_spawned(ship:Ship)
 signal ship_despawned(ship:Ship)
 signal all_players_loaded
 
+signal player_ready(id:int)
+
 
 var players:Dictionary[int, Dictionary]= {}
 var ships:Dictionary[int,Ship]={}
 
 var player_info :={
-	"name":"defa"
+	"name":"defa",
+	"ready":false
 }
 
 var players_ready := 0
@@ -30,10 +33,13 @@ func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	
+	muliplayer_client.disconnected.connect(_on_server_disconnected)
+	muliplayer_client.peer_disconnected.connect(_on_player_disconnected)
 
 
-func join_game(lobby:String):
-	muliplayer_client.start(lobby)
+func join_game(lobby:String, mesh:bool=false):
+	muliplayer_client.start(lobby, mesh)
 
 # When the server decides to start the game from a UI scene,
 # do Lobby.load_game.rpc(filepath)
@@ -45,6 +51,9 @@ func load_game_rpc(game_scene_path:String):
 # Every peer will call this when they have loaded the game scene.
 @rpc("any_peer", "call_local", "reliable")
 func player_ready_rpc():
+	var caller:=multiplayer.get_remote_sender_id()
+	player_ready.emit(caller)
+	players[caller]["ready"]=true
 	if multiplayer.is_server():
 		players_ready += 1
 		print("added " + str(players_ready))
@@ -58,11 +67,6 @@ func player_loaded_rpc(id:int):
 	players_loaded[id]=null
 	if players_loaded.size() == players.size():
 		all_players_loaded.emit()
-	
-	
-@rpc("any_peer", "call_local", "reliable")
-func test_rpc():
-	print("rpc test: ", multiplayer.get_unique_id())
 
 # When a peer connects, send them my player info.
 # This allows transfer of all desired data for each player, not only the unique ID.
@@ -101,4 +105,5 @@ func _on_server_disconnected():
 	multiplayer.multiplayer_peer = null
 	players.clear()
 	server_disconnected.emit()
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 	

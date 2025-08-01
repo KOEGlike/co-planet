@@ -16,7 +16,7 @@ grow_vertical = 2
 theme = ExtResource("1_x4jx1")
 script = ExtResource("1_nt7q6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -30,41 +30,97 @@ offset_bottom = 74.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LobbyID" type="Label" parent="VBoxContainer"]
+[node name="NameSelector" type="HBoxContainer" parent="vbox"]
 layout_mode = 2
 
-[node name="copy" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(70, 30.03)
-layout_mode = 2
-text = "copy"
-
-[node name="Name" type="TextEdit" parent="VBoxContainer"]
+[node name="Name" type="TextEdit" parent="vbox/NameSelector"]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 placeholder_text = "Name"
 
-[node name="Lobby" type="TextEdit" parent="VBoxContainer"]
+[node name="Ok" type="Button" parent="vbox/NameSelector"]
+custom_minimum_size = Vector2(70, 30.03)
+layout_mode = 2
+text = "Ok"
+
+[node name="HostJoin" type="VBoxContainer" parent="vbox"]
+visible = false
+layout_mode = 2
+
+[node name="LobbySection" type="HBoxContainer" parent="vbox/HostJoin"]
+layout_mode = 2
+
+[node name="LobbyField" type="TextEdit" parent="vbox/HostJoin/LobbySection"]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 placeholder_text = "Lobby"
 
-[node name="Join" type="Button" parent="VBoxContainer"]
+[node name="JoinButton" type="Button" parent="vbox/HostJoin/LobbySection"]
 custom_minimum_size = Vector2(70, 30.03)
 layout_mode = 2
 text = "Join"
 
-[node name="Ready" type="Button" parent="VBoxContainer"]
+[node name="OrLabel" type="Label" parent="vbox/HostJoin"]
+layout_mode = 2
+text = "OR"
+horizontal_alignment = 1
+
+[node name="HostSection" type="HBoxContainer" parent="vbox/HostJoin"]
+layout_mode = 2
+alignment = 1
+
+[node name="HostButton" type="Button" parent="vbox/HostJoin/HostSection"]
+custom_minimum_size = Vector2(70, 30.03)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Host
+"
+
+[node name="MeshLabel" type="Label" parent="vbox/HostJoin/HostSection"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Mesh:"
+
+[node name="MeshCheckBox" type="CheckBox" parent="vbox/HostJoin/HostSection"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Waiting" type="VBoxContainer" parent="vbox"]
+visible = false
+layout_mode = 2
+
+[node name="LobbySection" type="HBoxContainer" parent="vbox/Waiting"]
+layout_mode = 2
+alignment = 2
+
+[node name="LobbyID" type="Label" parent="vbox/Waiting/LobbySection"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="copy" type="Button" parent="vbox/Waiting/LobbySection"]
+custom_minimum_size = Vector2(70, 30.03)
+layout_mode = 2
+text = "copy"
+
+[node name="Ready" type="Button" parent="vbox/Waiting"]
 custom_minimum_size = Vector2(70, 30.03)
 layout_mode = 2
 text = "ready"
 
-[node name="Players" type="VBoxContainer" parent="VBoxContainer"]
+[node name="PlayersLabel" type="Label" parent="vbox/Waiting"]
+layout_mode = 2
+text = "Players:"
+
+[node name="PlayersSection" type="VBoxContainer" parent="vbox/Waiting"]
 layout_mode = 2
 script = ExtResource("3_bqqt6")
 
-[connection signal="pressed" from="VBoxContainer/copy" to="." method="_on_copy_pressed"]
-[connection signal="text_changed" from="VBoxContainer/Name" to="." method="_on_name_text_changed"]
-[connection signal="pressed" from="VBoxContainer/Join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="VBoxContainer/Ready" to="." method="_on_ready_pressed"]
+[connection signal="pressed" from="vbox/NameSelector/Ok" to="." method="_on_ok_pressed"]
+[connection signal="pressed" from="vbox/HostJoin/LobbySection/JoinButton" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="vbox/HostJoin/HostSection/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="vbox/Waiting/LobbySection/copy" to="." method="_on_copy_pressed"]
+[connection signal="pressed" from="vbox/Waiting/Ready" to="." method="_on_ready_pressed"]

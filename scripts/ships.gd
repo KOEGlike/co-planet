@@ -1,4 +1,4 @@
-extends Node3D
+extends Node
 
 const ship_scene := preload("res://scenes/ship.tscn")
 
@@ -28,6 +28,12 @@ func _ready() -> void:
 					Manager.ship_despawned.emit(ship)
 					Manager.ships.erase(id)	
 				)
+	)
+	
+	Manager.player_disconnected.connect(func(id:int):
+			var ship:=Manager.ships[id]
+			if ship!=null:
+				ship.queue_free()
 	)
 	
 
