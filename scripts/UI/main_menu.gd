@@ -12,6 +12,8 @@ extends Control
 @onready var host_join: VBoxContainer = $vbox/HostJoin
 @onready var waiting: VBoxContainer = $vbox/Waiting
 
+@onready var map_background: Map = $Map
+
 enum MainMenuState {
 	Name,
 	HostJoin,
@@ -61,6 +63,8 @@ func _on_copy_pressed() -> void:
 	DisplayServer.clipboard_set(lobby_id.text)
 
 func _ready() -> void:
+	map_background.generate_map(100)
+
 	Manager.muliplayer_client.lobby_joined.connect(func(id, lobby, mesh):
 		lobby_id.text=lobby
 		print("id " + str(id) + " lobby " + lobby)

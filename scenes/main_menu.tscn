@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://civehd8skdhik"]
+[gd_scene load_steps=6 format=3 uid="uid://civehd8skdhik"]
 
 [ext_resource type="Script" uid="uid://cqwok4pd7cs46" path="res://scripts/UI/main_menu.gd" id="1_nt7q6"]
 [ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="1_x4jx1"]
 [ext_resource type="Script" uid="uid://cky0wtv7smtje" path="res://scripts/UI/players_list.gd" id="3_bqqt6"]
+[ext_resource type="PackedScene" uid="uid://bbipqfvmkog6o" path="res://scenes/map.tscn" id="4_wu84c"]
+[ext_resource type="PackedScene" uid="uid://d200vd282qda2" path="res://scenes/world.tscn" id="5_8ln24"]
 
 [node name="MainMenu" type="Control"]
+z_index = 1
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -15,6 +18,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_x4jx1")
 script = ExtResource("1_nt7q6")
+
+[node name="Map" parent="." instance=ExtResource("4_wu84c")]
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -118,6 +123,11 @@ text = "Players:"
 [node name="PlayersSection" type="VBoxContainer" parent="vbox/Waiting"]
 layout_mode = 2
 script = ExtResource("3_bqqt6")
+
+[node name="World" parent="." instance=ExtResource("5_8ln24")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4)
 
 [connection signal="pressed" from="vbox/NameSelector/Ok" to="." method="_on_ok_pressed"]
 [connection signal="pressed" from="vbox/HostJoin/LobbySection/JoinButton" to="." method="_on_join_pressed"]

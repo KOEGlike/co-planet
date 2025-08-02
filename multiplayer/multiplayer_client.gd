@@ -4,7 +4,7 @@ extends WsClient
 
 var rtc_mp := WebRTCMultiplayerPeer.new()
 
-const SIGNALING_SERVER_URL="localhost:3000"
+const SIGNALING_SERVER_URL = "localhost:3000"
 
 func _init() -> void:
 	disconnected.connect(_disconnected)
@@ -37,16 +37,16 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 	# the TURN server, instead of only performing the initial connection).
 	peer.initialize({
 		"iceServers": [
-			{ "urls": "stun:stun.l.google.com:19302" },
-			{ "urls": "stun:stun.l.google.com:5349" },
-			{ "urls": "stun:stun1.l.google.com:3478" },
-			{ "urls": "stun:stun1.l.google.com:5349" },
-			{ "urls": "stun:stun2.l.google.com:19302" },
-			{ "urls": "stun:stun2.l.google.com:5349" },
-			{ "urls": "stun:stun3.l.google.com:3478" },
-			{ "urls": "stun:stun3.l.google.com:5349" },
-			{ "urls": "stun:stun4.l.google.com:19302" },
-			{ "urls": "stun:stun4.l.google.com:5349" }
+			{"urls": "stun:stun.l.google.com:19302"},
+			{"urls": "stun:stun.l.google.com:5349"},
+			{"urls": "stun:stun1.l.google.com:3478"},
+			{"urls": "stun:stun1.l.google.com:5349"},
+			{"urls": "stun:stun2.l.google.com:19302"},
+			{"urls": "stun:stun2.l.google.com:5349"},
+			{"urls": "stun:stun3.l.google.com:3478"},
+			{"urls": "stun:stun3.l.google.com:5349"},
+			{"urls": "stun:stun4.l.google.com:19302"},
+			{"urls": "stun:stun4.l.google.com:5349"}
 		]
 	})
 	peer.session_description_created.connect(_offer_created.bind(id))
@@ -69,9 +69,8 @@ func _offer_created(type: String, data: String, id: int) -> void:
 	if type == "offer": send_offer(id, data)
 	else: send_answer(id, data)
 
-func _lobby_joined(id:int, _lobby: String, use_mesh:bool) -> void:
+func _lobby_joined(id: int, _lobby: String, use_mesh: bool) -> void:
 	# print("Connected %d, mesh: %s" % [id, use_mesh])
-	
 	if use_mesh:
 		rtc_mp.create_mesh(id)
 	elif id == 1:

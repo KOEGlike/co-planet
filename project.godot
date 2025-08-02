@@ -84,3 +84,6 @@ common/physics_interpolation=true
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+shading/overrides/force_vertex_shading=true
+shading/overrides/force_lambert_over_burley=true
+anti_aliasing/screen_space_roughness_limiter/enabled=false
