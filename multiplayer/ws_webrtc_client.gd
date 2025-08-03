@@ -4,6 +4,7 @@ extends Node
 
 signal lobby_joined(id: int, lobby: String, use_mesh: bool)
 signal disconnected()
+signal connected()
 signal peer_connected(id: int)
 signal peer_disconnected(id: int)
 signal offer_received(id: int, offer: String)
@@ -19,7 +20,9 @@ var code := 1000
 var reason := "Unknown"
 var old_state := WebSocketPeer.STATE_CLOSED
 
-func connect_to_url(url: String) -> void:
+const SIGNALING_SERVER_URL = "localhost:3000"
+
+func connect_to_url(url: String = SIGNALING_SERVER_URL) -> void:
 	close()
 	code = 1000
 	reason = "Unknown"

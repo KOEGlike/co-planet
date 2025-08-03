@@ -14,11 +14,16 @@ extends Control
 
 @onready var map_background: Map = $Map
 
+@onready var camera_3d: Camera3D = $Camera3D
+
 enum MainMenuState {
 	Name,
 	HostJoin,
 	Ready,
 }
+
+func _process(delta: float) -> void:
+	camera_3d.rotate_y(0.03*delta)
 
 var state:MainMenuState=MainMenuState.Name:
 	set(x):
@@ -63,7 +68,7 @@ func _on_copy_pressed() -> void:
 	DisplayServer.clipboard_set(lobby_id.text)
 
 func _ready() -> void:
-	map_background.generate_map(100)
+	map_background.generate_map(60, 0.0005)
 
 	Manager.muliplayer_client.lobby_joined.connect(func(id, lobby, mesh):
 		lobby_id.text=lobby

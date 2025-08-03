@@ -9,8 +9,12 @@ const C2_ASTROID := preload("res://scenes/asteroids/asteroid_2c_2.tscn")
 const E2_ASTROID := preload("res://scenes/asteroids/asteroid_2e_2.tscn")
 const PACK_ASTROID := preload("res://scenes/asteroids/asteroid_pack.tscn")
 
+@export var size_curve:Curve
+@export var max_size_multiplier=20
+@export var min_size_multiplier=2
+
 const MAX_OFFSET := 200
-const ASTEROID_DENSITY := 0.0001
+const ASTEROID_DENSITY := 0.00001
 
 func _ready() -> void:
 	asteroid_spawner.set_multiplayer_authority(1)
@@ -45,7 +49,15 @@ func create_asteroid(_data):
 			asteroid = PACK_ASTROID.instantiate()
 	
  
-	var scale := randf_range(1.5, 2.5)
+	var rand := randf_range(3, 10.5)
+	
+	var scale
+	if size_curve != null:
+		scale=size_curve.sample(rand)
+		scale=remap(scale, 0,1,min_size_multiplier, max_size_multiplier)
+	else:
+		scale=randf_range(min_size_multiplier, max_size_multiplier)
+	
 	asteroid.scale = Vector3(scale + randf_range(-0.1, 0.1), scale + randf_range(-0.1, 0.1), scale + randf_range(-0.1, 0.1))
 	asteroid.position = Vector3(randf_range(-MAX_OFFSET, MAX_OFFSET), randf_range(-MAX_OFFSET, MAX_OFFSET), randf_range(-MAX_OFFSET, MAX_OFFSET))
 	return asteroid

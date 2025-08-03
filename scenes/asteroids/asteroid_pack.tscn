@@ -28,3 +28,4 @@ transform = Transform3D(100, -2.83277e-14, -1.23824e-21, 0, -4.37114e-06, 100, -
 transform = Transform3D(1, -1.32349e-23, -2.64698e-23, 1.32349e-23, 1, 2.64698e-23, 2.64698e-23, -2.64698e-23, 1, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_5jxnn")
 material_overlay = SubResource("StandardMaterial3D_xu2j5")
+gi_mode = 2

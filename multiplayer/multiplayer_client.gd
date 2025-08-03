@@ -4,8 +4,6 @@ extends WsClient
 
 var rtc_mp := WebRTCMultiplayerPeer.new()
 
-const SIGNALING_SERVER_URL = "localhost:3000"
-
 func _init() -> void:
 	disconnected.connect(_disconnected)
 

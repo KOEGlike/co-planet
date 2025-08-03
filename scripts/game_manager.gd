@@ -13,7 +13,6 @@ signal all_players_loaded
 
 signal player_ready(id: int)
 
-
 var players: Dictionary[int, Dictionary] = {}
 var ships: Dictionary[int, Ship] = {}
 
@@ -41,8 +40,8 @@ func join_game(lobby: String, mesh: bool = false):
 # When the server decides to start the game from a UI scene,
 # do Lobby.load_game.rpc(filepath)
 @rpc("call_local", "reliable")
-func load_game_rpc(game_scene_path: String):
-	get_tree().change_scene_to_file(game_scene_path)
+func load_game_rpc():
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 
 # Every peer will call this when they have loaded the game scene.
@@ -56,7 +55,7 @@ func player_ready_rpc():
 		print("added " + str(players_ready))
 		if players_ready == players.size():
 			print("load game")
-			load_game_rpc.rpc("res://scenes/main.tscn")
+			load_game_rpc.rpc()
 			players_ready = 0
 	
 @rpc("any_peer", "call_local", "reliable")

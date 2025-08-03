@@ -18,6 +18,10 @@ func _ready() -> void:
 	Manager.all_players_loaded.connect(func():
 		if multiplayer.is_server():
 			for id in Manager.players:
+				if Manager.ships.has(id):
+					continue
+					
+				
 				print("spawning player: ", str(id))
 				var data = {}
 				data["id"] = id

@@ -1,13 +1,17 @@
-[gd_scene load_steps=14 format=3 uid="uid://kbih5hymkb5o"]
+[gd_scene load_steps=16 format=3 uid="uid://kbih5hymkb5o"]
 
 [ext_resource type="Script" uid="uid://c3cidquvopei6" path="res://scripts/ship.gd" id="1_2gnfn"]
 [ext_resource type="PackedScene" uid="uid://ygd6s5gcauht" path="res://assets/ship_model.glb" id="1_q631a"]
+[ext_resource type="FontFile" uid="uid://by5mwifjorve4" path="res://assets/fonts/Jersey_10/Jersey10-Regular.ttf" id="2_itrim"]
 [ext_resource type="PackedScene" uid="uid://8ehaqiq45s0h" path="res://scenes/gun.tscn" id="3_4tobq"]
 [ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="4_3m36u"]
 [ext_resource type="Texture2D" uid="uid://cjrt5b8br7cuv" path="res://assets/pixil-frame-0.png" id="4_tfsc7"]
 [ext_resource type="Script" uid="uid://cxfebhkj30srm" path="res://scripts/UI/health.gd" id="5_gudjc"]
 [ext_resource type="Script" uid="uid://c6vdap40ay4r6" path="res://scripts/UI/mag.gd" id="6_7j21i"]
 [ext_resource type="Script" uid="uid://c6iydvpll8v17" path="res://scripts/UI/mag_label.gd" id="8_8qiel"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_itrim"]
+viewport_path = NodePath("SubViewport")
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2gnfn"]
 points = PackedVector3Array(5.96046e-08, -5.96046e-08, -1.42536, -0.996745, -5.96046e-08, 0.56246, 5.96046e-08, 0.547715, 0.210271, 0.996745, -5.96046e-08, 0.56246, 5.96046e-08, -0.547716, 0.210271)
@@ -36,13 +40,13 @@ corner_radius_bottom_left = 5
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8qiel"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
 properties/1/path = NodePath(".:health")
 properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/1/replication_mode = 2
 properties/2/path = NodePath(".:rotation")
 properties/2/spawn = true
-properties/2/replication_mode = 1
+properties/2/replication_mode = 2
 
 [node name="Ship" type="RigidBody3D"]
 transform = Transform3D(-5.96046e-08, 0, -1, 0, 1, 0, 1, 0, -5.96046e-08, 0, 0, 0)
@@ -51,6 +55,19 @@ continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 10
 script = ExtResource("1_2gnfn")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(-5.96046e-08, 0, 1, 0, 1, 0, -1, 0, -5.96046e-08, 0, 1.1, 0)
+billboard = 1
+text = "sdfsdf"
+font = ExtResource("2_itrim")
+font_size = 120
+outline_size = 10
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(-5.96046e-08, 0, 1, 0, 1, 0, -1, 0, -5.96046e-08, 0, 0.7, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_itrim")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.74228e-09, 0, -0.2)
@@ -64,6 +81,9 @@ fov = 90.0
 
 [node name="ShipModel" parent="." instance=ExtResource("1_q631a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.74228e-09, 0, -0.2)
+
+[node name="Plane" parent="ShipModel" index="0"]
+gi_mode = 2
 
 [node name="Gun" parent="." instance=ExtResource("3_4tobq")]
 transform = Transform3D(0, -1, -1.03316e-07, -1, 7.10543e-15, -1.19209e-07, 1.19209e-07, 1.03316e-07, -1, -1.19209e-07, -3.57628e-08, -2)
@@ -152,8 +172,29 @@ script = ExtResource("8_8qiel")
 [node name="ShipSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8qiel")
 
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(170, 20)
+
+[node name="HealthBar" type="ProgressBar" parent="SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1
+theme = ExtResource("4_3m36u")
+theme_override_styles/background = SubResource("StyleBoxFlat_gudjc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tfsc7")
+value = 100.0
+show_percentage = false
+script = ExtResource("5_gudjc")
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="health_update" from="." to="." method="_on_health_update"]
 [connection signal="health_update" from="." to="Control/HealthContainer/HealthBar" method="_on_ship_health_update"]
+[connection signal="health_update" from="." to="SubViewport/HealthBar" method="_on_ship_health_update"]
 [connection signal="mag_update" from="Gun" to="Control/MagContainer/MagBar" method="_on_gun_mag_update"]
 [connection signal="mag_update" from="Gun" to="Control/MagContainer/MagBar/Label" method="_on_gun_mag_update"]
+
+[editable path="ShipModel"]

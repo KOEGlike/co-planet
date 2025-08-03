@@ -2,25 +2,6 @@ class_name Ship
 
 extends RigidBody3D
 
-@onready var camera: Camera3D = $Camera3D
-@onready var gun: Gun = $Gun
-@onready var crosshair: Sprite2D = $Control/Crosshair
-@onready var control: Control = $Control
-@onready var ship_synchronizer: MultiplayerSynchronizer = $ShipSynchronizer
-
-signal health_update(max:int, current:int)
-
-@export var max_health:=100
-
-var health:=max_health:
-	set(val):
-		if val<0:
-			val=0
-		health_update.emit(max_health, val)
-		health=val
-	get():
-		return health;
-
 @export_category("camera")
 @export var camera_offset :=Vector3(-3, 1, 2)
 @export var camera_fov:float=90.0
@@ -32,14 +13,45 @@ var health:=max_health:
 @export var speed:=10
 @export var pitch :=30
 
-@export_category("target")
-@export var target:Node3D=null
+@export_category("targeting")
+var distance_to_mouse_to_target:=150
+var distance_to_mouse_to_detarget:=200
+var crosshair_color_neutral:=Color.from_rgba8(255,255,255)
+var crosshair_color_targeting:=Color.from_rgba8(255,0,0)
+
+@export var max_health:=100
+
+@onready var camera: Camera3D = $Camera3D
+@onready var gun: Gun = $Gun
+@onready var crosshair: Sprite2D = $Control/Crosshair
+@onready var control: Control = $Control
+@onready var ship_synchronizer: MultiplayerSynchronizer = $ShipSynchronizer
+@onready var label_3d: Label3D = $Label3D
+@onready var sprite_3d: Sprite3D = $Sprite3D
+
+signal health_update(max:int, current:int)
+
+var contact_damage=3
 
 var dir:float=0
 var id:int=0
 var ships_on_screen:Array[Ship]=[]
+var target:Node3D=null
+
+var health:
+	set(val):
+		print("setting health to ", str(val))
+		if val<0:
+			val=0
+			print("adjusted helath: ", str(val))
+		health_update.emit(max_health, val)
+		health=val
+	get():
+		return health;
 
 func _ready() -> void:
+	health=max_health
+	
 	gun.bullet_spawner.set_multiplayer_authority(id)
 	ship_synchronizer.set_multiplayer_authority(id)
 	
@@ -53,7 +65,12 @@ func _ready() -> void:
 		var calb:=func():
 			on_ship_exit(ship)
 		Manager.ships[i].tree_exiting.connect(calb)
+		
+	label_3d.text=Manager.players[id]["name"]
 	
+	if id == multiplayer.get_unique_id():
+		sprite_3d.visible=false
+		label_3d.visible=false
 	
 	
 	
@@ -100,56 +117,78 @@ func _process(delta: float) -> void:
 			direc = target.global_position
 		gun.shoot(direc)
 	
-	closest_to_mouse(get_viewport().get_mouse_position())
+	select_target(get_viewport().get_mouse_position())
 	
 	if target!=null:
 		var pos:=camera.unproject_position(target.global_position)
 		crosshair.position=lerp(crosshair.position, pos, 0.3)
+		
+		crosshair.modulate=crosshair_color_targeting
 	else:
 		crosshair.position=get_viewport().size/2
+		crosshair.modulate=crosshair_color_neutral
 	
 func on_new_ship(node:Ship) ->void:
 	if node != self:
 		var ship:Ship=node
-		var visiblity:VisibleOnScreenNotifier3D=ship.get_node("VisibleOnScreen")
+		var visibility:VisibleOnScreenNotifier3D=ship.get_node("VisibleOnScreen")
 		
 		var on_ship_entered_screen:=func():
 			ships_on_screen.append(ship)
 			print(ship.name + " entered")
 			print(ships_on_screen)
-		visiblity.screen_entered.connect(on_ship_entered_screen)
+		visibility.screen_entered.connect(on_ship_entered_screen)
 		
 		var on_ship_exited_screen:=func():
 			ships_on_screen.erase(ship)
 			print(ship.name + "exited")
 			print(ships_on_screen)
-		visiblity.screen_exited.connect(on_ship_exited_screen)
+		visibility.screen_exited.connect(on_ship_exited_screen)
 		
 func on_ship_exit(node:Ship) ->void:
 	if node is Ship and node != self:
 		ships_on_screen.erase(node)
 
-func closest_to_mouse(pos:Vector2) -> void:
-		var closest:Node3D
-		var dist:float=INF
-		for ship in ships_on_screen:
-			var cur_dist:float=pos.distance_squared_to(camera.unproject_position(ship.global_position))
-			if cur_dist < dist:
-				dist=cur_dist
-				closest=ship
+func select_target(pos:Vector2) -> void:
+	var closest:Node3D
+	var dist:float=INF
+	for ship in ships_on_screen:
+		var cur_dist:float=pos.distance_to(camera.unproject_position(ship.global_position))
+		if cur_dist < dist:
+			dist=cur_dist
+			closest=ship
+	if target!=closest and dist<=distance_to_mouse_to_target:
 		target=closest
+		
+	if dist>distance_to_mouse_to_detarget:
+		target=null	
+		
+	
 
 
 func _on_body_entered(body: Node) -> void:
-	if id == multiplayer.get_unique_id() and body is Bullet:
-		health-=body.damage
-		print("got " + str(body.damage) + "damage; health: " + str(health))
+	if not id == multiplayer.get_unique_id():
+		return
 		
-
-
-func _on_health_update(_max: int, current: int) -> void:
-	if id == multiplayer.get_unique_id() and current == 0:
+	var damage
+	if body is Bullet:
+		damage=body.damage
+	elif body is Ship:
+		damage=body.contact_damage
+	else:
+		damage=1
+		
+	print("health before damage: ",str(health))
+	health-=damage
+	print("got " + str(damage) + "damage; health: " + str(health))
+		
+	if health<=0:
 		global_position=Vector3(randf_range(-10, 10),randf_range(-10, 10),randf_range(-10, 10))
 		health=max_health
 		print("died, new health: ", str(health))
+
+
+
+		
+		
 		

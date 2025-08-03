@@ -1,10 +1,11 @@
 {
     "godotTools.editorPath.godot4": "/home/koeg/.local/share/Steam/steamapps/common/Godot Engine/godot.x11.opt.tools.64",
     "cSpell.words": [
-        "despawned",
-        "onready",
-        "randf",
-        "tscn"
+      "despawned",
+      "lerp",
+      "onready",
+      "randf",
+      "tscn"
     ],
     "files.exclude": {
     "**/*.uid": true
