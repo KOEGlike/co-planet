@@ -10,13 +10,13 @@ func _ready() -> void:
 		var ship_instance: Ship = ship_scene.instantiate()
 		ship_instance.id = id
 		ship_instance.name = "Ship" + str(id)
-		Manager.ship_spawned.emit(ship_instance)
 		return ship_instance
 		
 	Manager.player_loaded_rpc.rpc(multiplayer.get_unique_id())
 	
 	Manager.all_players_loaded.connect(func():
-		if multiplayer.is_server():
+		var sdfsd=multiplayer.get_unique_id()
+		if Manager.multiplayer.get_unique_id() == 1:
 			for id in Manager.players:
 				if Manager.ships.has(id):
 					continue

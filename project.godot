@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 [autoload]
 
 Manager="*res://scenes/game_manager.tscn"
+CrosshairState="*res://scripts/crosshair_state.gd"
 
 [display]
 

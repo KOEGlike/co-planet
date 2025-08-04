@@ -23,7 +23,7 @@ func _ready() -> void:
 
 
 	Manager.all_players_loaded.connect(func():
-		if multiplayer.is_server():
+		if Manager.multiplayer.get_unique_id()==1:
 			generate_map()
 	)
 	

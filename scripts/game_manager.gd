@@ -13,6 +13,9 @@ signal all_players_loaded
 
 signal player_ready(id: int)
 
+signal kill(killer:int, killed:int)
+signal damage(damage:int, damager:int, damaged:int)
+
 var players: Dictionary[int, Dictionary] = {}
 var ships: Dictionary[int, Ship] = {}
 
@@ -24,6 +27,15 @@ var player_info := {
 var players_ready := 0
 var players_loaded := {}
 
+
+class PlayerScore:
+	var kills:int=0
+	var deaths:int=0
+	var damage:int=0
+	
+var player_scores:Dictionary[int, PlayerScore]={
+	0:PlayerScore.new() # for rocks
+}
 
 func _ready():
 	multiplayer.allow_object_decoding = true
@@ -60,10 +72,11 @@ func player_ready_rpc():
 	
 @rpc("any_peer", "call_local", "reliable")
 func player_loaded_rpc(id: int):
-	print("loaded: ", str(id), " self: ", str(multiplayer.get_unique_id()))
+	print("loaded: ", str(id), " self: ", str(multiplayer.get_unique_id()), " nr.:", str(players_loaded.size()))
 	players_loaded[id] = null
 	if players_loaded.size() == players.size():
 		all_players_loaded.emit()
+		print("all loaded")
 
 # When a peer connects, send them my player info.
 # This allows transfer of all desired data for each player, not only the unique ID.
@@ -78,6 +91,7 @@ func _on_player_connected(id: int):
 func _register_player_rpc(new_player_info: Dictionary):
 	var new_player_id := multiplayer.get_remote_sender_id()
 	players[new_player_id] = new_player_info
+	player_scores[new_player_id]=PlayerScore.new()
 	player_connected.emit(new_player_id, new_player_info)
 
 
@@ -90,6 +104,7 @@ func _on_connected_ok():
 	print("connected ok, self register: ", multiplayer.get_unique_id())
 	var peer_id = multiplayer.get_unique_id()
 	players[peer_id] = player_info
+	player_scores[peer_id]=PlayerScore.new()
 	player_connected.emit(peer_id, player_info)
 
 
@@ -102,3 +117,14 @@ func _on_server_disconnected():
 	players.clear()
 	server_disconnected.emit()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	
+@rpc("any_peer","reliable", "call_local")
+func _add_kill_rpc(killer:int, killed:int):
+	player_scores[killer].kills+=1
+	player_scores[killed].deaths+=1
+	kill.emit(killer, killed)
+	
+@rpc("any_peer","reliable", "call_local")
+func _add_damage_rpc(dmg:int,damager:int, damaged:int):
+	player_scores[damager].damage+=dmg
+	damage.emit(dmg, damager, damaged)

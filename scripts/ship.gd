@@ -16,20 +16,21 @@ extends RigidBody3D
 @export_category("targeting")
 var distance_to_mouse_to_target:=150
 var distance_to_mouse_to_detarget:=200
-var crosshair_color_neutral:=Color.from_rgba8(255,255,255)
-var crosshair_color_targeting:=Color.from_rgba8(255,0,0)
 
 @export var max_health:=100
 
 @onready var camera: Camera3D = $Camera3D
 @onready var gun: Gun = $Gun
-@onready var crosshair: Sprite2D = $Control/Crosshair
 @onready var control: Control = $Control
 @onready var ship_synchronizer: MultiplayerSynchronizer = $ShipSynchronizer
 @onready var label_3d: Label3D = $Label3D
 @onready var sprite_3d: Sprite3D = $Sprite3D
 
 signal health_update(max:int, current:int)
+signal crosshair_position(pos:Vector2)
+signal crosshar_state(state:CrosshairState.CrosshairState)
+
+
 
 var contact_damage=3
 
@@ -55,9 +56,6 @@ func _ready() -> void:
 	gun.bullet_spawner.set_multiplayer_authority(id)
 	ship_synchronizer.set_multiplayer_authority(id)
 	
-	Manager.ship_spawned.connect(on_new_ship)
-	Manager.ship_despawned.connect(on_ship_exit)
-	
 	for i in Manager.ships:
 		print("lala " + str(i))
 		var ship:Ship=Manager.ships[i]
@@ -65,14 +63,15 @@ func _ready() -> void:
 		var calb:=func():
 			on_ship_exit(ship)
 		Manager.ships[i].tree_exiting.connect(calb)
-		
+	
+	Manager.ship_spawned.connect(on_new_ship)
+	Manager.ship_despawned.connect(on_ship_exit)
+
 	label_3d.text=Manager.players[id]["name"]
 	
 	if id == multiplayer.get_unique_id():
 		sprite_3d.visible=false
 		label_3d.visible=false
-	
-	
 	
 func _physics_process(delta: float) -> void:
 	if id != multiplayer.get_unique_id():
@@ -119,14 +118,15 @@ func _process(delta: float) -> void:
 	
 	select_target(get_viewport().get_mouse_position())
 	
+	var pos:Vector2
 	if target!=null:
-		var pos:=camera.unproject_position(target.global_position)
-		crosshair.position=lerp(crosshair.position, pos, 0.3)
-		
-		crosshair.modulate=crosshair_color_targeting
+		pos=camera.unproject_position(target.global_position)
+		crosshar_state.emit(CrosshairState.CrosshairState.TARGETING)
 	else:
-		crosshair.position=get_viewport().size/2
-		crosshair.modulate=crosshair_color_neutral
+		pos=get_viewport().size/2
+		crosshar_state.emit(CrosshairState.CrosshairState.NEUTRAL)
+	
+	crosshair_position.emit(pos)
 	
 func on_new_ship(node:Ship) ->void:
 	if node != self:
@@ -163,32 +163,29 @@ func select_target(pos:Vector2) -> void:
 	if dist>distance_to_mouse_to_detarget:
 		target=null	
 		
-	
-
-
 func _on_body_entered(body: Node) -> void:
 	if not id == multiplayer.get_unique_id():
 		return
 		
 	var damage
+	var killer
+	
 	if body is Bullet:
 		damage=body.damage
+		killer=body.id
 	elif body is Ship:
 		damage=body.contact_damage
+		killer=body.id
 	else:
 		damage=1
+		killer=0
 		
-	print("health before damage: ",str(health))
 	health-=damage
-	print("got " + str(damage) + "damage; health: " + str(health))
 		
+	Manager._add_damage_rpc.rpc(damage, killer, id)
+	
 	if health<=0:
 		global_position=Vector3(randf_range(-10, 10),randf_range(-10, 10),randf_range(-10, 10))
 		health=max_health
 		print("died, new health: ", str(health))
-
-
-
-		
-		
-		
+		Manager._add_kill_rpc.rpc(killer, id)
