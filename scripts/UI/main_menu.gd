@@ -69,8 +69,8 @@ func _on_copy_pressed() -> void:
 
 func _ready() -> void:
 	map_background.generate_map(60, 0.0005)
-
 	Manager.muliplayer_client.lobby_joined.connect(func(id, lobby, mesh):
 		lobby_id.text=lobby
 		print("id " + str(id) + " lobby " + lobby)
 	)	
+		

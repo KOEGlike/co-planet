@@ -15,13 +15,12 @@ const PACK_ASTROID := preload("res://scenes/asteroids/asteroid_pack.tscn")
 
 const MAX_OFFSET := 200
 const ASTEROID_DENSITY := 0.00001
+	
 
 func _ready() -> void:
 	asteroid_spawner.set_multiplayer_authority(1)
-
 	asteroid_spawner.spawn_function = create_asteroid
-
-
+	
 	Manager.all_players_loaded.connect(func():
 		if Manager.multiplayer.get_unique_id()==1:
 			generate_map()

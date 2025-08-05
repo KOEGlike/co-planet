@@ -1,11 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://kbih5hymkb5o"]
+[gd_scene load_steps=12 format=3 uid="uid://kbih5hymkb5o"]
 
 [ext_resource type="Script" uid="uid://c3cidquvopei6" path="res://scripts/ship.gd" id="1_2gnfn"]
 [ext_resource type="PackedScene" uid="uid://ygd6s5gcauht" path="res://assets/ship_model.glb" id="1_q631a"]
 [ext_resource type="FontFile" uid="uid://by5mwifjorve4" path="res://assets/fonts/Jersey_10/Jersey10-Regular.ttf" id="2_itrim"]
 [ext_resource type="PackedScene" uid="uid://8ehaqiq45s0h" path="res://scenes/gun.tscn" id="3_4tobq"]
 [ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="4_3m36u"]
-[ext_resource type="PackedScene" uid="uid://cyeyyxks44kfo" path="res://scenes/ship-ui.tscn" id="7_3m36u"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_itrim"]
 viewport_path = NodePath("Sprite3D/SubViewport")
@@ -107,8 +106,6 @@ transform = Transform3D(0, -1, -1.03316e-07, -1, 7.10543e-15, -1.19209e-07, 1.19
 
 [node name="VisibleOnScreen" type="VisibleOnScreenNotifier3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, 0, 0, -0.546898)
-
-[node name="Control" parent="." instance=ExtResource("7_3m36u")]
 
 [node name="ShipSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8qiel")

@@ -1,13 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://bicc14jy1ta5b"]
+[gd_scene load_steps=8 format=3 uid="uid://bicc14jy1ta5b"]
 
 [ext_resource type="Script" uid="uid://dm1wt3itc1jo8" path="res://scripts/ships.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://bbipqfvmkog6o" path="res://scenes/map.tscn" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://ckgm3m8naq1w1" path="res://scripts/main.gd" id="1_tefeu"]
 [ext_resource type="PackedScene" uid="uid://d200vd282qda2" path="res://scenes/world.tscn" id="2_tefeu"]
 [ext_resource type="Script" uid="uid://bdrv8bsfh5tlo" path="res://scripts/ship_spawner.gd" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://dsoermnx7fqwe" path="res://scenes/asteroids/asteroid_pack.tscn" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://cyeyyxks44kfo" path="res://scenes/ship-ui.tscn" id="7_o6xl0"]
 
 [node name="Main" type="Node3D"]
 transform = Transform3D(1.00568, 0, 0, 0, 1.00568, 0, 0, 0, 1.00568, 0, 0, 0)
+script = ExtResource("1_tefeu")
 
 [node name="World" parent="." instance=ExtResource("2_tefeu")]
 
@@ -22,6 +25,8 @@ script = ExtResource("3_sugp2")
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("5_tbgi4")]
 transform = Transform3D(0.994352, 0, 0, 0, 0.994352, 0, 0, 0, 0.994352, -0.187929, 0, 0.0341972)
+
+[node name="ShipUI" parent="." instance=ExtResource("7_o6xl0")]
 
 [connection signal="despawned" from="Ships/MultiplayerSpawner" to="Ships" method="_on_multiplayer_spawner_despawned"]
 [connection signal="spawned" from="Ships/MultiplayerSpawner" to="Ships" method="_on_multiplayer_spawner_spawned"]
