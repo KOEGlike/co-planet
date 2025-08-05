@@ -4,24 +4,16 @@
 [ext_resource type="PackedScene" uid="uid://ygd6s5gcauht" path="res://assets/ship_model.glb" id="1_q631a"]
 [ext_resource type="FontFile" uid="uid://by5mwifjorve4" path="res://assets/fonts/Jersey_10/Jersey10-Regular.ttf" id="2_itrim"]
 [ext_resource type="PackedScene" uid="uid://8ehaqiq45s0h" path="res://scenes/gun.tscn" id="3_4tobq"]
-[ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="4_3m36u"]
+[ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://style/ship.tres" id="4_3m36u"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_itrim"]
 viewport_path = NodePath("Sprite3D/SubViewport")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gudjc"]
 bg_color = Color(0.6, 0.6, 0.6, 0.184314)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tfsc7"]
 bg_color = Color(0.979412, 0.000788382, 0.979405, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [sub_resource type="GDScript" id="GDScript_7j21i"]
 script/source = "extends ProgressBar
@@ -38,7 +30,7 @@ points = PackedVector3Array(5.96046e-08, -5.96046e-08, -1.42536, -0.996745, -5.9
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8qiel"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
-properties/0/replication_mode = 2
+properties/0/replication_mode = 1
 properties/1/path = NodePath(".:health")
 properties/1/spawn = true
 properties/1/replication_mode = 2

@@ -13,12 +13,15 @@ const PACK_ASTROID := preload("res://scenes/asteroids/asteroid_pack.tscn")
 @export var max_size_multiplier=20
 @export var min_size_multiplier=2
 
+@export var host:=true
+
 const MAX_OFFSET := 200
 const ASTEROID_DENSITY := 0.00001
 	
 
 func _ready() -> void:
-	asteroid_spawner.set_multiplayer_authority(1)
+	if host:
+		asteroid_spawner.set_multiplayer_authority(1)
 	asteroid_spawner.spawn_function = create_asteroid
 	
 	Manager.all_players_loaded.connect(func():

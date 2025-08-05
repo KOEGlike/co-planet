@@ -6,7 +6,7 @@
 script = ExtResource("1_x77fm")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.25
+wait_time = 0.5
 autostart = true
 
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="."]

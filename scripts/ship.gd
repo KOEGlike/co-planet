@@ -32,8 +32,10 @@ var id: int = 0
 var ships_on_screen: Array[Ship] = []
 var target: Node3D = null
 
-var health:
+var health:int:
 	set(val):
+		if val == null:
+			return
 		print("setting health to ", str(val))
 		if val < 0:
 			val = 0
@@ -50,16 +52,19 @@ var health:
 
 
 func _ready() -> void:
+	gun.bullet_spawner.set_multiplayer_authority(id)
+	ship_synchronizer.set_multiplayer_authority(id)
+	health = max_health
+	label_3d.text = Manager.players[id]["name"]
+	
 	if id != multiplayer.get_unique_id():
 		return
 		
 	Manager.ship_spawned.connect(on_new_ship)
 	Manager.ship_despawned.connect(on_ship_exit)
-
-	health = max_health
-
-	gun.bullet_spawner.set_multiplayer_authority(id)
-	ship_synchronizer.set_multiplayer_authority(id)
+	Manager.all_players_loaded.connect(func():
+		health=max_health	
+	)
 
 	for i in Manager.ships:
 		var ship: Ship = Manager.ships[i]
@@ -68,8 +73,6 @@ func _ready() -> void:
 			on_ship_exit(ship)
 		Manager.ships[i].tree_exiting.connect(calb)
 
-	label_3d.text = Manager.players[id]["name"]
-
 	
 	sprite_3d.visible = false
 	label_3d.visible = false
@@ -77,6 +80,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	camera.current = id == multiplayer.get_unique_id()
+	
 	if id != multiplayer.get_unique_id():
 		return
 
@@ -130,6 +134,11 @@ func _physics_process(delta: float) -> void:
 
 
 func on_new_ship(node: Ship) -> void:
+	if Manager.ships.size() == Manager.players.size():
+		health=max_health
+		if id == 1:
+			Manager._reset_scores_rpc.rpc()
+	
 	if node != self:
 		var ship: Ship = node
 		var visibility: VisibleOnScreenNotifier3D = ship.get_node("VisibleOnScreen")

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://civehd8skdhik"]
+[gd_scene load_steps=7 format=3 uid="uid://civehd8skdhik"]
 
 [ext_resource type="Script" uid="uid://cqwok4pd7cs46" path="res://scripts/UI/main_menu.gd" id="1_nt7q6"]
-[ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://ship.tres" id="1_x4jx1"]
+[ext_resource type="Theme" uid="uid://b253fn54dru5h" path="res://style/ship.tres" id="1_x4jx1"]
 [ext_resource type="Script" uid="uid://cky0wtv7smtje" path="res://scripts/UI/players_list.gd" id="3_bqqt6"]
+[ext_resource type="Script" uid="uid://eg0p7af3nn1x" path="res://scripts/UI/loading.gd" id="4_rtw2f"]
 [ext_resource type="PackedScene" uid="uid://bbipqfvmkog6o" path="res://scenes/map.tscn" id="4_wu84c"]
 [ext_resource type="PackedScene" uid="uid://d200vd282qda2" path="res://scenes/world.tscn" id="5_8ln24"]
 
@@ -20,6 +21,7 @@ theme = ExtResource("1_x4jx1")
 script = ExtResource("1_nt7q6")
 
 [node name="Map" parent="." instance=ExtResource("4_wu84c")]
+host = false
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -85,14 +87,22 @@ size_flags_horizontal = 0
 text = "Host
 "
 
-[node name="MeshLabel" type="Label" parent="vbox/HostJoin/HostSection"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "Mesh:"
-
 [node name="MeshCheckBox" type="CheckBox" parent="vbox/HostJoin/HostSection"]
 layout_mode = 2
 size_flags_horizontal = 8
+text = "Mesh"
+
+[node name="Loading" type="Label" parent="vbox"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+text = "LOADING..."
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4_rtw2f")
+
+[node name="Timer" type="Timer" parent="vbox/Loading"]
+autostart = true
 
 [node name="Waiting" type="VBoxContainer" parent="vbox"]
 visible = false
@@ -132,5 +142,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4)
 [connection signal="pressed" from="vbox/NameSelector/Ok" to="." method="_on_ok_pressed"]
 [connection signal="pressed" from="vbox/HostJoin/LobbySection/JoinButton" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="vbox/HostJoin/HostSection/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="timeout" from="vbox/Loading/Timer" to="vbox/Loading" method="_on_timer_timeout"]
 [connection signal="pressed" from="vbox/Waiting/LobbySection/copy" to="." method="_on_copy_pressed"]
 [connection signal="pressed" from="vbox/Waiting/Ready" to="." method="_on_ready_pressed"]

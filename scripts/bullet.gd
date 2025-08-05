@@ -23,3 +23,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	global_position+=-global_basis.z*speed*delta
 	
+
+
+func _on_timer_timeout() -> void:
+	_on_body_entered(null)

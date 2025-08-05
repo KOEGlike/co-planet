@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://qsdtcvprvfw8"]
+
+[ext_resource type="Script" uid="uid://c52nniacukpv" path="res://scripts/UI/stat.gd" id="1_1jl2q"]
+
+[node name="Stat" type="HBoxContainer"]
+theme_override_constants/separation = 15
+script = ExtResource("1_1jl2q")
+
+[node name="PlayerName" type="Label" parent="."]
+layout_mode = 2
+text = "koeg"
+
+[node name="Kill" type="Label" parent="."]
+layout_mode = 2
+text = "2"
+
+[node name="Damage" type="Label" parent="."]
+layout_mode = 2
+text = "333"
+
+[node name="Deaths" type="Label" parent="."]
+layout_mode = 2
+text = "4"

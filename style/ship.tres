@@ -1,0 +1,38 @@
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://b253fn54dru5h"]
+
+[ext_resource type="FontFile" uid="uid://by5mwifjorve4" path="res://assets/fonts/Jersey_10/Jersey10-Regular.ttf" id="1_qeiym"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7yxku"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4qqbp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbduv"]
+bg_color = Color(0.259294, 0.259294, 0.259294, 1)
+shadow_size = 6
+shadow_offset = Vector2(3, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qeiym"]
+content_margin_left = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dt65h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nexlm"]
+content_margin_left = 8.0
+
+[resource]
+Button/font_sizes/font_size = 25
+Button/fonts/font = ExtResource("1_qeiym")
+Button/styles/focus = null
+Button/styles/hover = SubResource("StyleBoxFlat_7yxku")
+Button/styles/normal = SubResource("StyleBoxFlat_4qqbp")
+Button/styles/pressed = SubResource("StyleBoxFlat_qbduv")
+CheckBox/styles/normal = SubResource("StyleBoxFlat_qeiym")
+Label/font_sizes/font_size = 25
+Label/fonts/font = ExtResource("1_qeiym")
+ProgressBar/font_sizes/font_size = 25
+ProgressBar/fonts/font = ExtResource("1_qeiym")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_dt65h")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_dt65h")
+TextEdit/font_sizes/font_size = 25
+TextEdit/fonts/font = ExtResource("1_qeiym")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_nexlm")

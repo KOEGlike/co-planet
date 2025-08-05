@@ -24,7 +24,7 @@ var player_info := {
 	"ready": false
 }
 
-var players_ready := 0
+var players_ready := {}
 var players_loaded := {}
 
 
@@ -63,12 +63,11 @@ func player_ready_rpc():
 	player_ready.emit(caller)
 	players[caller]["ready"] = true
 	if multiplayer.is_server():
-		players_ready += 1
+		players_ready[caller]=null
 		print("added " + str(players_ready))
-		if players_ready == players.size():
+		if players_ready.size() == players.size():
 			print("load game")
 			load_game_rpc.rpc()
-			players_ready = 0
 	
 @rpc("any_peer", "call_local", "reliable")
 func player_loaded_rpc(id: int):
@@ -76,6 +75,7 @@ func player_loaded_rpc(id: int):
 	players_loaded[id] = null
 	if players_loaded.size() == players.size():
 		all_players_loaded.emit()
+		
 		print("all loaded")
 
 # When a peer connects, send them my player info.
@@ -128,3 +128,8 @@ func _add_kill_rpc(killer:int, killed:int):
 func _add_damage_rpc(dmg:int,damager:int, damaged:int):
 	player_scores[damager].damage+=dmg
 	damage.emit(dmg, damager, damaged)
+	
+@rpc("any_peer","reliable", "call_local")
+func _reset_scores_rpc():
+	for id in player_scores:
+		player_scores[id]=PlayerScore.new()

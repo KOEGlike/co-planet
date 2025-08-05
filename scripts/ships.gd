@@ -35,8 +35,6 @@ func _on_multiplayer_spawner_spawned(ship: Node) -> void:
 
 
 func _on_all_players_loaded():
-	var sdfsd = multiplayer.get_unique_id()
-	print("spawning players, ", str(sdfsd))
 	if Manager.multiplayer.get_unique_id() == 1:
 		for id in Manager.players:
 			if Manager.ships.has(id):
@@ -46,9 +44,11 @@ func _on_all_players_loaded():
 			var data = {}
 			data["id"] = id
 			var ship: Ship = multiplayer_spawner.spawn(data)
+			
+			_on_multiplayer_spawner_spawned(ship)
+			ship.tree_exiting.connect(func():
+					_on_multiplayer_spawner_despawned(ship)
+			)
+			
 			ship.global_position = Vector3(randf_range(-10, 10), randf_range(-10, 10), randf_range(-10, 10))
 			Manager.ships[id] = ship
-			ship.tree_exiting.connect(func():
-					Manager.ship_despawned.emit(ship)
-					Manager.ships.erase(id)
-			)

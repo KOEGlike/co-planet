@@ -16,9 +16,12 @@ extends Control
 
 @onready var camera_3d: Camera3D = $Camera3D
 
+@onready var loading: Label = $vbox/Loading
+
 enum MainMenuState {
 	Name,
 	HostJoin,
+	Loading,
 	Ready,
 }
 
@@ -32,6 +35,8 @@ var state:MainMenuState=MainMenuState.Name:
 				name_selector.hide()
 			MainMenuState.HostJoin:
 				host_join.hide()
+			MainMenuState.Loading:
+				loading.hide()
 			MainMenuState.Ready:
 				waiting.hide()
 				
@@ -40,6 +45,8 @@ var state:MainMenuState=MainMenuState.Name:
 				name_selector.visible=true
 			MainMenuState.HostJoin:
 				host_join.visible=true
+			MainMenuState.Loading:
+				loading.visible=true
 			MainMenuState.Ready:
 				waiting.visible=true
 		
@@ -48,17 +55,22 @@ var state:MainMenuState=MainMenuState.Name:
 		return state
 
 func _on_ok_pressed() -> void:
-	if !name_field.text.is_empty():
-		Manager.player_info["name"]=name_field.text
-		state=MainMenuState.HostJoin
+	if name_field.text.is_empty():
+		return
+		
+	Manager.player_info["name"]=name_field.text
+	state=MainMenuState.HostJoin
 
 func _on_join_pressed() -> void:
+	if lobby_field.text.is_empty():
+		return
+		
 	Manager.join_game(lobby_field.text)
-	state=MainMenuState.Ready
+	state=MainMenuState.Loading
 
 func _on_host_button_pressed() -> void:
 	Manager.join_game("", mesh_check_box.button_pressed)
-	state=MainMenuState.Ready
+	state=MainMenuState.Loading
 
 
 func _on_ready_pressed() -> void:
@@ -70,6 +82,7 @@ func _on_copy_pressed() -> void:
 func _ready() -> void:
 	map_background.generate_map(60, 0.0005)
 	Manager.muliplayer_client.lobby_joined.connect(func(id, lobby, mesh):
+		state=MainMenuState.Ready
 		lobby_id.text=lobby
 		print("id " + str(id) + " lobby " + lobby)
 	)	
