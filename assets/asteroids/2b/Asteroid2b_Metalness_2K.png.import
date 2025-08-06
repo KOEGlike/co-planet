@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnqlseyx5piqx"
 path.s3tc="res://.godot/imported/Asteroid2b_Metalness_2K.png-9cc9de2214605a138f2ac67dbbb19456.s3tc.ctex"
+path.etc2="res://.godot/imported/Asteroid2b_Metalness_2K.png-9cc9de2214605a138f2ac67dbbb19456.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/asteroids/2b/Asteroid2b_Metalness_2K.png"
-dest_files=["res://.godot/imported/Asteroid2b_Metalness_2K.png-9cc9de2214605a138f2ac67dbbb19456.s3tc.ctex"]
+dest_files=["res://.godot/imported/Asteroid2b_Metalness_2K.png-9cc9de2214605a138f2ac67dbbb19456.s3tc.ctex", "res://.godot/imported/Asteroid2b_Metalness_2K.png-9cc9de2214605a138f2ac67dbbb19456.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bql62f43fx12t"
 path.s3tc="res://.godot/imported/asteroid_pack_01_1.png-6ab7bee2642e5ffc3ee4f4844b0ceb1d.s3tc.ctex"
+path.etc2="res://.godot/imported/asteroid_pack_01_1.png-6ab7bee2642e5ffc3ee4f4844b0ceb1d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/asteroids/pack/asteroid_pack_01_1.png"
-dest_files=["res://.godot/imported/asteroid_pack_01_1.png-6ab7bee2642e5ffc3ee4f4844b0ceb1d.s3tc.ctex"]
+dest_files=["res://.godot/imported/asteroid_pack_01_1.png-6ab7bee2642e5ffc3ee4f4844b0ceb1d.s3tc.ctex", "res://.godot/imported/asteroid_pack_01_1.png-6ab7bee2642e5ffc3ee4f4844b0ceb1d.etc2.ctex"]
 
 [params]
 

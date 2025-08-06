@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dva5jw6f7k00s"
 path.s3tc="res://.godot/imported/Asteroid_2c_Asteroid2c_Metalness_2K-Asteroid2c_Roughness_2K.png-dfe2e598bd6ec01b9d3c6c9848bcf4bc.s3tc.ctex"
+path.etc2="res://.godot/imported/Asteroid_2c_Asteroid2c_Metalness_2K-Asteroid2c_Roughness_2K.png-dfe2e598bd6ec01b9d3c6c9848bcf4bc.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/asteroids/2c/Asteroid_2c_Asteroid2c_Metalness_2K-Asteroid2c_Roughness_2K.png"
-dest_files=["res://.godot/imported/Asteroid_2c_Asteroid2c_Metalness_2K-Asteroid2c_Roughness_2K.png-dfe2e598bd6ec01b9d3c6c9848bcf4bc.s3tc.ctex"]
+dest_files=["res://.godot/imported/Asteroid_2c_Asteroid2c_Metalness_2K-Asteroid2c_Roughness_2K.png-dfe2e598bd6ec01b9d3c6c9848bcf4bc.s3tc.ctex", "res://.godot/imported/Asteroid_2c_Asteroid2c_Metalness_2K-Asteroid2c_Roughness_2K.png-dfe2e598bd6ec01b9d3c6c9848bcf4bc.etc2.ctex"]
 
 [params]
 
