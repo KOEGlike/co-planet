@@ -1,8 +1,8 @@
 class_name MultiplayerClient
-
 extends WsClient
 
 var rtc_mp := WebRTCMultiplayerPeer.new()
+
 
 func _init() -> void:
 	disconnected.connect(_disconnected)
@@ -15,16 +15,19 @@ func _init() -> void:
 	peer_connected.connect(_peer_connected)
 	peer_disconnected.connect(_peer_disconnected)
 
+
 func start(lobby: String = "", mesh: bool = true, url: String = SIGNALING_SERVER_URL) -> void:
 	stop()
 	self.mesh = mesh
 	self.lobby = lobby
 	connect_to_url(url)
 
+
 func stop() -> void:
 	multiplayer.multiplayer_peer = null
 	rtc_mp.close()
 	close()
+
 
 func _create_peer(id: int) -> WebRTCPeerConnection:
 	var peer: WebRTCPeerConnection = WebRTCPeerConnection.new()
@@ -35,28 +38,53 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 	# the TURN server, instead of only performing the initial connection).
 	peer.initialize({
 		"iceServers": [
-			{"urls": "stun:stun.l.google.com:19302"},
+		{
+		"urls": "stun:stun.relay.metered.ca:80",
+		} ,
+		{
+		"urls": "turn:standard.relay.metered.ca:80",
+		"username": "ea9197db0f774d8cfce84459",
+		"credential": "2CZRlG8RVc5wIjuf",
+		} ,
+		{
+		"urls": "turn:standard.relay.metered.ca:80?transport=tcp",
+		"username": "ea9197db0f774d8cfce84459",
+		"credential": "2CZRlG8RVc5wIjuf",
+		} ,
+		{
+		"urls": "turn:standard.relay.metered.ca:443",
+		"username": "ea9197db0f774d8cfce84459",
+		"credential": "2CZRlG8RVc5wIjuf",
+		} ,
+		{
+		"urls": "turns:standard.relay.metered.ca:443?transport=tcp",
+		"username": "ea9197db0f774d8cfce84459",
+		"credential": "2CZRlG8RVc5wIjuf",
+		} ,
 		]
-	})
+		})
 	peer.session_description_created.connect(_offer_created.bind(id))
 	peer.ice_candidate_created.connect(_new_ice_candidate.bind(id))
 	rtc_mp.add_peer(peer, id)
 	if id < rtc_mp.get_unique_id():
 		peer.create_offer()
 	return peer
-	
+
+
 func _new_ice_candidate(mid_name: String, index_name: int, sdp_name: String, id: int) -> void:
 	print("candidate sent, id: ", str(id))
 	send_candidate(id, mid_name, index_name, sdp_name)
 
+
 func _offer_created(type: String, data: String, id: int) -> void:
 	if not rtc_mp.has_peer(id):
-		print("peer doesnt exist: ",str(id))
+		print("peer doesnt exist: ", str(id))
 		return
 	print("created: ", type, " uni: " + str(multiplayer.get_unique_id()))
 	rtc_mp.get_peer(id).connection.set_local_description(type, data)
 	if type == "offer": send_offer(id, data)
 	else: send_answer(id, data)
+
 
 func _lobby_joined(id: int, _lobby: String, use_mesh: bool) -> void:
 	print("Connected %d, mesh: %s" % [id, use_mesh])
@@ -66,11 +94,11 @@ func _lobby_joined(id: int, _lobby: String, use_mesh: bool) -> void:
 		rtc_mp.create_server()
 	else:
 		rtc_mp.create_client(id)
-	
+
 	multiplayer.multiplayer_peer = rtc_mp
-	
+
 	print("unique id" + str(multiplayer.get_unique_id()), " is server:", str(multiplayer.is_server()))
-	
+
 	lobby = _lobby
 
 
@@ -103,6 +131,6 @@ func _answer_received(id: int, answer: String) -> void:
 
 
 func _candidate_received(id: int, mid: String, index: int, sdp: String) -> void:
-	print("candidate received, id: ",str(id))
+	print("candidate received, id: ", str(id))
 	if rtc_mp.has_peer(id):
 		rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)

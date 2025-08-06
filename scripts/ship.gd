@@ -32,6 +32,10 @@ var id: int = 0
 var ships_on_screen: Array[Ship] = []
 var target: Node3D = null
 
+const EXPLOAD = preload("res://assets/audio/expload.mp3")
+const IMPACT = preload("res://assets/audio/impact.mp3")
+const SHOOT = preload("res://assets/audio/shoot.mp3")
+
 var health:int:
 	set(val):
 		if val == null:
@@ -49,6 +53,7 @@ var health:int:
 @onready var gun: Gun = $Gun
 @onready var ship_synchronizer: MultiplayerSynchronizer = $ShipSynchronizer
 @onready var label_3d: Label3D = $Label3D
+@onready var audio_stream_player_3d: AudioStreamPlayer3D = $AudioStreamPlayer3D
 
 
 func _ready() -> void:
@@ -80,6 +85,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	camera.current = id == multiplayer.get_unique_id()
+	
+	if Input.is_action_just_pressed("shoot"):
+		audio_stream_player_3d.stream=SHOOT
+		audio_stream_player_3d.play()
 	
 	if id != multiplayer.get_unique_id():
 		return
@@ -177,8 +186,8 @@ func select_target(pos: Vector2) -> void:
 
 
 func _on_body_entered(body: Node) -> void:
-	if not id == multiplayer.get_unique_id():
-		return
+	audio_stream_player_3d.stream=IMPACT
+	audio_stream_player_3d.play()
 
 	var damage
 	var killer
@@ -193,12 +202,15 @@ func _on_body_entered(body: Node) -> void:
 		damage = 1
 		killer = 0
 
-	health -= damage
-
-	Manager._add_damage_rpc.rpc(damage, killer, id)
+	if id == multiplayer.get_unique_id():
+		health -= damage
+		Manager._add_damage_rpc.rpc(damage, killer, id)
 
 	if health <= 0:
-		global_position = Vector3(randf_range(-10, 10), randf_range(-10, 10), randf_range(-10, 10))
-		health = max_health
-		print("died, new health: ", str(health))
-		Manager._add_kill_rpc.rpc(killer, id)
+		audio_stream_player_3d.stream=EXPLOAD
+		audio_stream_player_3d.play()
+		if id == multiplayer.get_unique_id():
+			global_position = Vector3(randf_range(-10, 10), randf_range(-10, 10), randf_range(-10, 10))
+			health = max_health
+			print("died, new health: ", str(health))
+			Manager._add_kill_rpc.rpc(killer, id)

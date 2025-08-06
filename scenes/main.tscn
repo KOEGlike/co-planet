@@ -5,8 +5,8 @@
 [ext_resource type="Script" uid="uid://ckgm3m8naq1w1" path="res://scripts/main.gd" id="1_tefeu"]
 [ext_resource type="PackedScene" uid="uid://d200vd282qda2" path="res://scenes/world.tscn" id="2_tefeu"]
 [ext_resource type="Script" uid="uid://bdrv8bsfh5tlo" path="res://scripts/ship_spawner.gd" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://dsoermnx7fqwe" path="res://scenes/asteroids/asteroid_pack.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://cyeyyxks44kfo" path="res://scenes/ship-ui.tscn" id="7_o6xl0"]
+[ext_resource type="AudioStream" uid="uid://datp5b00gkchq" path="res://assets/audio/bg-music.mp3" id="7_tipki"]
 
 [node name="Main" type="Node3D"]
 transform = Transform3D(1.00568, 0, 0, 0, 1.00568, 0, 0, 0, 1.00568, 0, 0, 0)
@@ -23,10 +23,14 @@ script = ExtResource("3_sugp2")
 
 [node name="Map" parent="." instance=ExtResource("1_o5qli")]
 
-[node name="Sketchfab_Scene" parent="." instance=ExtResource("5_tbgi4")]
-transform = Transform3D(0.994352, 0, 0, 0, 0.994352, 0, 0, 0, 0.994352, -0.187929, 0, 0.0341972)
-
 [node name="ShipUI" parent="." instance=ExtResource("7_o6xl0")]
+
+[node name="BGAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_tipki")
+autoplay = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="despawned" from="Ships/MultiplayerSpawner" to="Ships" method="_on_multiplayer_spawner_despawned"]
 [connection signal="spawned" from="Ships/MultiplayerSpawner" to="Ships" method="_on_multiplayer_spawner_spawned"]
+[connection signal="finished" from="BGAudioStreamPlayer" to="." method="_on_bg_audio_stream_player_finished"]
