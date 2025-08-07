@@ -34,7 +34,6 @@ var target: Node3D = null
 
 const EXPLOAD = preload("res://assets/audio/expload.mp3")
 const IMPACT = preload("res://assets/audio/impact.mp3")
-const SHOOT = preload("res://assets/audio/shoot.mp3")
 
 var health:int:
 	set(val):
@@ -85,10 +84,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	camera.current = id == multiplayer.get_unique_id()
-	
-	if Input.is_action_just_pressed("shoot"):
-		audio_stream_player_3d.stream=SHOOT
-		audio_stream_player_3d.play()
 	
 	if id != multiplayer.get_unique_id():
 		return

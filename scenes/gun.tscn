@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://8ehaqiq45s0h"]
+[gd_scene load_steps=3 format=3 uid="uid://8ehaqiq45s0h"]
 
 [ext_resource type="Script" uid="uid://dqgl0k8v21t4k" path="res://scripts/gun.gd" id="1_x77fm"]
+[ext_resource type="AudioStream" uid="uid://cpejkceveb1vi" path="res://assets/audio/shoot.mp3" id="2_og67c"]
 
 [node name="Gun" type="Node3D"]
 script = ExtResource("1_x77fm")
@@ -11,6 +12,9 @@ autostart = true
 
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_og67c")
 
 [connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
