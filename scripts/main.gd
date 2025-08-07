@@ -7,9 +7,11 @@ const READY_FIGHT = preload("res://assets/audio/ready_fight.mp3")
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 
 
-
 func _ready() -> void:
-	audio_stream_player.stream = READY_FIGHT
+	Manager.all_players_loaded.connect(func():
+		audio_stream_player.stream = READY_FIGHT
+		audio_stream_player.play()	
+	)
 	Manager.player_loaded_rpc.rpc(multiplayer.get_unique_id())
 
 

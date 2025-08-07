@@ -20,7 +20,7 @@ var code := 1000
 var reason := "Unknown"
 var old_state := WebSocketPeer.STATE_CLOSED
 
-const SIGNALING_SERVER_URL = "localhost:3000"
+const SIGNALING_SERVER_URL = "co-planet-signaling.koeg.dev "
 
 func connect_to_url(url: String = SIGNALING_SERVER_URL) -> void:
 	close()
